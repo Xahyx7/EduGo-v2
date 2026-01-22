@@ -2,8 +2,8 @@
 
 import { loadState } from "./state/persistence.js";
 import { renderDashboard } from "./ui/dashboard.js";
-import { setupAddSubject } from "./ui/addSubject.js";
+import { setupAddSubjectModal } from "./ui/addSubjectModal.js";
 
 loadState();
 renderDashboard();
-setupAddSubject();
+setupAddSubjectModal();
