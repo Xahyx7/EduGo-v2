@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>EduGo</title>
+</head>
+<body>
+  <script>
+    // Decide whether to show intro or app
+    const introSeen = localStorage.getItem("edugo_intro_seen");
+
+    if (introSeen) {
+      window.location.href = "app/index.html";
+    } else {
+      window.location.href = "intro/intro.html";
+    }
+  </script>
+</body>
+</html>
