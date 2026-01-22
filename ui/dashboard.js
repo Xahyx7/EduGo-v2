@@ -1,4 +1,4 @@
-// app/ui/dashboard.js
+// ui/dashboard.js
 
 import { appState } from "../state/state.js";
 
@@ -8,13 +8,11 @@ export function renderDashboard() {
 
   grid.innerHTML = "";
 
-  // If no subjects exist
   if (appState.subjects.length === 0) {
     grid.innerHTML = `<p style="color:white;">No subjects added yet</p>`;
     return;
   }
 
-  // Render subject cards
   appState.subjects.forEach(subject => {
     const card = document.createElement("div");
     card.className = "subject-card";
