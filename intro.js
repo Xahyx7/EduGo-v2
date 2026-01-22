@@ -1,4 +1,3 @@
-// intro.js
 const INTRO_DURATION = 5500;
 
 setTimeout(() => {
@@ -6,7 +5,7 @@ setTimeout(() => {
   document.body.style.opacity = "0";
 
   setTimeout(() => {
-    window.location.replace("./index.html"); // dashboard
+    window.location.href = "./dashboard.html";
   }, 600);
 
 }, INTRO_DURATION);
