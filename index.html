@@ -8,12 +8,25 @@
   <link rel="stylesheet" href="styles/layout.css" />
   <link rel="stylesheet" href="styles/components.css" />
 </head>
+
 <body>
 
-  <!-- DASHBOARD TITLE (TEMPORARY) -->
   <h1 style="color: white; padding: 20px;">
     EduGo Dashboard
   </h1>
+
+  <!-- ADD SUBJECT BUTTON -->
+  <button id="addSubjectBtn" style="
+    margin-left:20px;
+    padding:10px 16px;
+    border-radius:10px;
+    border:none;
+    background:#4fc3f7;
+    color:#000;
+    cursor:pointer;
+  ">
+    + Add Subject
+  </button>
 
   <!-- DASHBOARD ROOT -->
   <div id="dashboard">
@@ -22,7 +35,6 @@
 
   <!-- APP LOGIC -->
   <script type="module">
-    // If intro not seen, redirect to intro
     const introSeen = localStorage.getItem("edugo_intro_seen");
     if (!introSeen) {
       window.location.href = "intro/intro.html";
@@ -32,4 +44,5 @@
   </script>
 
 </body>
+
 </html>
