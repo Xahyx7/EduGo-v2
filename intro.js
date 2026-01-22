@@ -1,6 +1,4 @@
-// intro/intro.js
-// Always show intro, then go to MAIN app
-
+// intro.js
 const INTRO_DURATION = 5500;
 
 setTimeout(() => {
@@ -8,8 +6,7 @@ setTimeout(() => {
   document.body.style.opacity = "0";
 
   setTimeout(() => {
-    // IMPORTANT: go to ROOT index.html
-    window.location.replace("/");
+    window.location.replace("./index.html"); // dashboard
   }, 600);
 
 }, INTRO_DURATION);
