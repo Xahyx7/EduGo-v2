@@ -49,13 +49,10 @@
 
   <!-- APP LOGIC -->
   <script type="module">
-    const introSeen = localStorage.getItem("edugo_intro_seen");
-    if (!introSeen) {
-      window.location.href = "intro/intro.html";
-    } else {
-      import("./app.js");
-    }
-  </script>
+  // ALWAYS show intro first
+  window.location.href = "intro/intro.html";
+</script>
+
 
 </body>
 
