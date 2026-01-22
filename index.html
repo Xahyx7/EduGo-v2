@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <title>EduGo</title>
 
-  <!-- Styles -->
   <link rel="stylesheet" href="styles/layout.css" />
   <link rel="stylesheet" href="styles/components.css" />
 </head>
@@ -15,7 +14,6 @@
     EduGo Dashboard
   </h1>
 
-  <!-- ADD SUBJECT BUTTON -->
   <button id="addSubjectBtn" style="
     margin-left:20px;
     padding:10px 16px;
@@ -27,33 +25,25 @@
   ">
     + Add Subject
   </button>
-<!-- ADD SUBJECT MODAL -->
-<div id="subjectModal" style="display:none;" class="modal-overlay">
-  <div class="modal">
-    <h2>Add Subject</h2>
 
-    <input id="subjectName" placeholder="Subject name" />
-    <input id="subjectUnits" type="number" placeholder="Total units" />
-
-    <div class="modal-actions">
-      <button id="cancelModal">Cancel</button>
-      <button id="saveSubject">Add</button>
+  <div id="subjectModal" style="display:none;" class="modal-overlay">
+    <div class="modal">
+      <h2>Add Subject</h2>
+      <input id="subjectName" placeholder="Subject name" />
+      <input id="subjectUnits" type="number" placeholder="Total units" />
+      <div class="modal-actions">
+        <button id="cancelModal">Cancel</button>
+        <button id="saveSubject">Add</button>
+      </div>
     </div>
   </div>
-</div>
 
-  <!-- DASHBOARD ROOT -->
   <div id="dashboard">
     <div id="subjectGrid"></div>
   </div>
 
-  <!-- APP LOGIC -->
-  <script type="module">
-  // ALWAYS show intro first
-  window.location.href = "intro/intro.html";
-</script>
-
+  <!-- LOAD APP (NO REDIRECTS HERE) -->
+  <script type="module" src="./app.js"></script>
 
 </body>
-
 </html>
