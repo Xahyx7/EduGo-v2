@@ -1,19 +1,35 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>EduGo</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles/layout.css" />
+  <link rel="stylesheet" href="styles/components.css" />
 </head>
 <body>
-  <script>
-    // Decide whether to show intro or app
-    const introSeen = localStorage.getItem("edugo_intro_seen");
 
-    if (introSeen) {
-      window.location.href = "app/index.html";
-    } else {
+  <!-- DASHBOARD TITLE (TEMPORARY) -->
+  <h1 style="color: white; padding: 20px;">
+    EduGo Dashboard
+  </h1>
+
+  <!-- DASHBOARD ROOT -->
+  <div id="dashboard">
+    <div id="subjectGrid"></div>
+  </div>
+
+  <!-- APP LOGIC -->
+  <script type="module">
+    // If intro not seen, redirect to intro
+    const introSeen = localStorage.getItem("edugo_intro_seen");
+    if (!introSeen) {
       window.location.href = "intro/intro.html";
+    } else {
+      import("./app.js");
     }
   </script>
+
 </body>
 </html>
