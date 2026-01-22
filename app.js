@@ -1,10 +1,9 @@
-// app/app.js
+// app.js
 
 import { loadState } from "./state/persistence.js";
 import { renderDashboard } from "./ui/dashboard.js";
+import { setupAddSubject } from "./ui/addSubject.js";
 
-// Load saved data from localStorage
 loadState();
-
-// Render dashboard UI (read-only for now)
 renderDashboard();
+setupAddSubject();
