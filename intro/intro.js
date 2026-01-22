@@ -1,18 +1,15 @@
-// intro.js
+// intro/intro.js
+// Always show intro, then go to MAIN app
 
 const INTRO_DURATION = 5500;
-const KEY = "edugo_intro_seen";
-
-if (localStorage.getItem(KEY)) {
-  window.location.replace("../app/index.html");
-}
 
 setTimeout(() => {
-  localStorage.setItem(KEY, "true");
-  document.body.style.opacity = "0";
   document.body.style.transition = "opacity 0.6s ease";
+  document.body.style.opacity = "0";
 
   setTimeout(() => {
-    window.location.replace("../app/index.html");
+    // IMPORTANT: go to ROOT index.html
+    window.location.replace("/");
   }, 600);
+
 }, INTRO_DURATION);
