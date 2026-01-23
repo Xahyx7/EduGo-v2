@@ -1,17 +1,37 @@
-/* app/styles/layout.css */
+/* styles/layout.css */
 
 body {
   margin: 0;
-  background: #0b0f1a;
-  font-family: Arial, sans-serif;
+  background: radial-gradient(circle at top, #0b1220, #020617);
+  font-family: "Segoe UI", system-ui, sans-serif;
+  color: #e5e7eb;
+}
+
+h1, h2 {
+  letter-spacing: 0.5px;
 }
 
 #dashboard {
-  padding: 20px;
+  padding: 24px;
 }
 
 #subjectGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+/* Buttons (global) */
+button {
+  font-family: inherit;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+}
+
+button:active {
+  transform: scale(0.97);
 }
