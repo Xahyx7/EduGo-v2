@@ -4,10 +4,20 @@ import { appState } from "../state/state.js";
 import { incrementUnit, decrementUnit } from "../state/reducers.js";
 
 export function renderDashboard() {
+  renderSubjects();
+  updateTimerSubjects();
+}
+
+function renderSubjects() {
   const grid = document.getElementById("subjectGrid");
   if (!grid) return;
 
   grid.innerHTML = "";
+
+  if (appState.subjects.length === 0) {
+    grid.innerHTML = `<p style="opacity:0.6">No subjects yet</p>`;
+    return;
+  }
 
   appState.subjects.forEach(subject => {
     const card = document.createElement("div");
@@ -45,5 +55,19 @@ export function renderDashboard() {
     };
 
     grid.appendChild(card);
+  });
+}
+
+function updateTimerSubjects() {
+  const select = document.getElementById("timerSubject");
+  if (!select) return;
+
+  select.innerHTML = `<option value="">Select subject</option>`;
+
+  appState.subjects.forEach(subject => {
+    const option = document.createElement("option");
+    option.value = subject.id;
+    option.textContent = subject.name;
+    select.appendChild(option);
   });
 }
