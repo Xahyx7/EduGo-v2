@@ -56,24 +56,7 @@
 
       </div>
 
-      <!-- FOCUS TIMER CARD -->
-      <div class="card card-large">
-        <h3>Focus Timer</h3>
-
-        <select id="timerSubject"></select>
-
-        <div id="timerDisplay" class="timer-big">00:00</div>
-
-        <div class="timer-actions">
-          <button id="startTimer">Start</button>
-          <button id="pauseTimer">Pause</button>
-          <button id="stopTimer">Stop</button>
-        </div>
-
-        <button id="enterFocusMode" class="primary">
-          Enter Focus Mode
-        </button>
-      </div>
+     
 
     </section>
 
@@ -98,6 +81,25 @@
 
   <!-- LOAD APP (NO REDIRECTS HERE) -->
   <script type="module" src="./app.js"></script>
+<!-- FLOATING FOCUS TIMER -->
+<div class="floating-timer" id="floatingTimer">
+
+  <div class="floating-header">
+    <span>Focus</span>
+    <button id="enterFocusMode" class="mini-btn">⛶</button>
+  </div>
+
+  <select id="timerSubject"></select>
+
+  <div id="timerDisplay" class="floating-time">00:00</div>
+
+  <div class="floating-actions">
+    <button id="startTimer">▶</button>
+    <button id="pauseTimer">⏸</button>
+    <button id="stopTimer">■</button>
+  </div>
+
+</div>
 
 </body>
 </html>
