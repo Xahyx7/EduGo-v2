@@ -1,24 +1,22 @@
-// SAVE STUDY SESSION (used by timer & focus mode)
-export function addStudySession(subjectId, minutes) {
-  if (!minutes || minutes <= 0) return;
+// state/selectors.js
 
-  appState.sessions.push({
-    subjectId,
-    minutes,
-    time: Date.now()
-  });
+import { appState } from "./state.js";
 
-  const subject = appState.subjects.find(s => s.id === subjectId);
-  if (subject) {
-    subject.timeSpent += minutes;
-  }
+// Minutes studied today
+export function getTodayMinutes() {
+  const today = new Date().toDateString();
 
-  saveState(appState);
+  return appState.sessions
+    .filter(s => new Date(s.time).toDateString() === today)
+    .reduce((sum, s) => sum + s.minutes, 0);
 }
 
-// UPDATE GOALS
-export function updateGoals(daily, weekly) {
-  appState.goals.dailyMinutes = daily;
-  appState.goals.weeklyMinutes = weekly;
-  saveState(appState);
+// Minutes studied in last 7 days
+export function getWeekMinutes() {
+  const now = Date.now();
+  const weekAgo = now - 7 * 24 * 60 * 60 * 1000;
+
+  return appState.sessions
+    .filter(s => s.time >= weekAgo)
+    .reduce((sum, s) => sum + s.minutes, 0);
 }
