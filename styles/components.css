@@ -63,3 +63,105 @@ button:active {
   font-weight: 600;
   color: #e5e7eb;
 }
+/* ================================
+   GLASSMORPHISM + LIFE
+   ================================ */
+
+/* Glass card upgrade */
+.card {
+  background: linear-gradient(
+      180deg,
+      rgba(255,255,255,0.10),
+      rgba(255,255,255,0.03)
+    );
+  backdrop-filter: blur(18px) saturate(120%);
+  border: 1px solid rgba(255,255,255,0.12);
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+/* Hover lift */
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow:
+    0 30px 60px rgba(0,0,0,0.55),
+    inset 0 0 0 1px rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.2);
+}
+
+/* Subtle idle breathing */
+@keyframes breathe {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+
+.card-large {
+  animation: breathe 6s ease-in-out infinite;
+}
+
+/* ================================
+   BUTTON MICRO-INTERACTIONS
+   ================================ */
+
+button {
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    filter 0.12s ease;
+}
+
+button:hover {
+  filter: brightness(1.1);
+}
+
+button:active {
+  transform: scale(0.96);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.4) inset;
+}
+
+/* Primary CTA */
+button.primary {
+  background: linear-gradient(135deg, #22d3ee, #4fc3f7);
+  color: #020617;
+  border: none;
+  box-shadow: 0 10px 30px rgba(79,195,247,0.35);
+}
+
+button.primary:hover {
+  box-shadow: 0 16px 40px rgba(79,195,247,0.5);
+}
+
+/* ================================
+   RING LIFE
+   ================================ */
+
+.today-ring {
+  filter: drop-shadow(0 0 18px rgba(79,195,247,0.25));
+}
+
+#todayRingProgress {
+  transition:
+    stroke-dashoffset 0.8s cubic-bezier(.4,0,.2,1),
+    filter 0.3s ease;
+}
+
+.card:hover #todayRingProgress {
+  filter: drop-shadow(0 0 10px rgba(79,195,247,0.8));
+}
+
+/* ================================
+   SUBJECT CARDS MOTION
+   ================================ */
+
+.subject-card {
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease;
+}
+
+.subject-card:hover {
+  transform: translateY(-8px) scale(1.01);
+}
