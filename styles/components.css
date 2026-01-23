@@ -261,3 +261,29 @@ button.primary:hover {
 .mini-ring circle:last-child {
   transition: stroke-dashoffset 0.6s cubic-bezier(.4,0,.2,1);
 }
+/* ===== SUBJECT CARD FIX ===== */
+
+.subject-card {
+  min-height: 140px;
+  padding: 18px;
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.14),
+    rgba(255,255,255,0.06)
+  );
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.18);
+  box-shadow:
+    0 20px 40px rgba(0,0,0,0.55),
+    inset 0 0 0 1px rgba(255,255,255,0.08);
+}
+
+.subject-top h3 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.subject-meta {
+  font-size: 13px;
+  opacity: 0.85;
+}
