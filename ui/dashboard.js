@@ -6,6 +6,7 @@ import { incrementUnit, decrementUnit } from "../state/reducers.js";
 export function renderDashboard() {
   const grid = document.getElementById("subjectGrid");
   if (!grid) return;
+renderGoalsPreview();
 
   // Clear dashboard
   grid.innerHTML = "";
