@@ -163,3 +163,9 @@
   border: none;
   cursor: pointer;
 }
+/* GOALS */
+
+#goalProgress {
+  margin-top: 10px;
+  color: #22c55e;
+}
