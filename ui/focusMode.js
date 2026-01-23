@@ -7,22 +7,31 @@ let interval = null;
 let seconds = 0;
 let activeSubjectId = null;
 
+
 export function setupFocusMode() {
   const openBtn = document.getElementById("enterFocusMode");
+  const overlay = document.getElementById("focusOverlay");
+
+  // 🛑 If focus mode UI is not present, DO NOTHING
+  if (!openBtn || !overlay) {
+    return;
+  }
+
   const closeBtn = document.getElementById("exitFocus");
   const startBtn = document.getElementById("focusStart");
   const pauseBtn = document.getElementById("focusPause");
   const stopBtn = document.getElementById("focusStop");
 
-  const overlay = document.getElementById("focusOverlay");
   const subjectSelect = document.getElementById("timerSubject");
   const subjectLabel = document.getElementById("focusSubject");
   const timeDisplay = document.getElementById("focusTime");
 
-  if (!openBtn) return;
+  let interval = null;
+  let seconds = 0;
+  let activeSubjectId = null;
 
   openBtn.onclick = () => {
-    if (!subjectSelect.value) {
+    if (!subjectSelect || !subjectSelect.value) {
       alert("Select a subject first");
       return;
     }
@@ -35,40 +44,33 @@ export function setupFocusMode() {
     document.body.style.overflow = "hidden";
   };
 
-  closeBtn.onclick = exitFocusMode;
+  closeBtn && (closeBtn.onclick = exit);
+  startBtn && (startBtn.onclick = start);
+  pauseBtn && (pauseBtn.onclick = pause);
+  stopBtn && (stopBtn.onclick = stop);
 
-  startBtn.onclick = () => {
+  function start() {
     if (interval) return;
-
     interval = setInterval(() => {
       seconds++;
       timeDisplay.textContent = format(seconds);
     }, 1000);
-  };
+  }
 
-  pauseBtn.onclick = () => {
+  function pause() {
     clearInterval(interval);
     interval = null;
-  };
+  }
 
-  stopBtn.onclick = () => {
-    clearInterval(interval);
-    interval = null;
-
-    if (activeSubjectId && seconds > 0) {
-      addTimeToSubject(activeSubjectId, Math.floor(seconds / 60));
-      renderDashboard();
-    }
-
-    exitFocusMode();
-  };
-
-  function exitFocusMode() {
-    clearInterval(interval);
-    interval = null;
+  function stop() {
+    pause();
     seconds = 0;
     timeDisplay.textContent = "00:00";
+    exit();
+  }
 
+  function exit() {
+    pause();
     overlay.style.display = "none";
     document.body.style.overflow = "auto";
   }
@@ -79,3 +81,4 @@ function format(sec) {
   const s = String(sec % 60).padStart(2, "0");
   return `${m}:${s}`;
 }
+
