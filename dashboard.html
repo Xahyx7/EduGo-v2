@@ -10,104 +10,68 @@
 
 <body>
 
-  <h1 style="color: white; padding: 20px;">
-    EduGo Dashboard
-  </h1>
+  <!-- APP CONTAINER -->
+  <div class="app-shell">
 
-  <button id="addSubjectBtn" style="
-    margin-left:20px;
-    padding:10px 16px;
-    border-radius:10px;
-    border:none;
-    background:#4fc3f7;
-    color:#000;
-    cursor:pointer;
-  ">
-    + Add Subject
-  </button>
-
-  <div id="subjectModal" style="display:none;" class="modal-overlay">
-    <div class="modal">
-      <h2>Add Subject</h2>
-      <input id="subjectName" placeholder="Subject name" />
-      <input id="subjectUnits" type="number" placeholder="Total units" />
-      <div class="modal-actions">
-        <button id="cancelModal">Cancel</button>
-        <button id="saveSubject">Add</button>
+    <!-- HEADER -->
+    <header class="app-header">
+      <div>
+        <h1>EduGo</h1>
+        <p class="subtitle">Your study control center</p>
       </div>
-    </div>
+      <div class="profile-chip">👤</div>
+    </header>
+
+    <!-- TOP GRID -->
+    <section class="top-grid">
+
+      <!-- TODAY PROGRESS (RING PLACEHOLDER) -->
+      <div class="card card-large">
+        <h3>Today</h3>
+        <div class="ring-placeholder">
+          <span>Progress Ring</span>
+        </div>
+      </div>
+
+      <!-- FOCUS TIMER CARD -->
+      <div class="card card-large">
+        <h3>Focus Timer</h3>
+
+        <select id="timerSubject"></select>
+
+        <div id="timerDisplay" class="timer-big">00:00</div>
+
+        <div class="timer-actions">
+          <button id="startTimer">Start</button>
+          <button id="pauseTimer">Pause</button>
+          <button id="stopTimer">Stop</button>
+        </div>
+
+        <button id="enterFocusMode" class="primary">
+          Enter Focus Mode
+        </button>
+      </div>
+
+    </section>
+
+    <!-- SUBJECTS -->
+    <section>
+      <h2>Subjects</h2>
+      <div id="subjectGrid" class="card-grid">
+        <!-- Subject cards injected by JS -->
+      </div>
+    </section>
+
+    <!-- GOALS PREVIEW -->
+    <section>
+      <h2>Today’s Goals</h2>
+
+      <div class="card">
+        <p>Goals preview will appear here</p>
+      </div>
+    </section>
+
   </div>
-
-  <div id="dashboard">
-    <div id="subjectGrid"></div>
-  </div>
-<!-- FOCUS TIMER -->
-<div style="margin:20px;color:white;">
-  <h2>Focus Timer</h2>
-
-  <select id="timerSubject">
-    <option value="">Select Subject</option>
-  </select>
-
-  <div id="timerDisplay" style="font-size:28px;margin:10px 0;">
-    00:00
-  </div>
-
-  <button id="startTimer">Start</button>
-  <button id="pauseTimer">Pause</button>
-  <button id="stopTimer">Stop</button>
-</div>
-<!-- ENTER FOCUS MODE BUTTON -->
-<button id="enterFocusMode" style="
-  margin:20px;
-  padding:10px 18px;
-  border-radius:12px;
-  border:none;
-  background:#22c55e;
-  color:#000;
-  cursor:pointer;
-">
-  Enter Focus Mode
-</button>
-
-<!-- FOCUS MODE OVERLAY -->
-<div id="focusOverlay" class="focus-overlay" style="display:none;">
-  <div class="focus-box">
-    <h2 id="focusSubject">Subject</h2>
-
-    <div id="focusTime" class="focus-time">00:00</div>
-
-    <div class="focus-actions">
-      <button id="focusStart">Start</button>
-      <button id="focusPause">Pause</button>
-      <button id="focusStop">End</button>
-    </div>
-
-    <button id="exitFocus" class="exit-focus">Exit</button>
-  </div>
-</div>
-<!-- GOALS SECTION -->
-<div style="margin:20px;color:white;">
-  <h2>Study Goals</h2>
-
-  <label>
-    Daily goal (minutes):
-    <input id="dailyGoal" type="number" style="width:80px;" />
-  </label>
-
-  <br /><br />
-
-  <label>
-    Weekly goal (minutes):
-    <input id="weeklyGoal" type="number" style="width:80px;" />
-  </label>
-
-  <br /><br />
-
-  <button id="saveGoals">Save Goals</button>
-
-  <p id="goalProgress"></p>
-</div>
 
   <!-- LOAD APP (NO REDIRECTS HERE) -->
   <script type="module" src="./app.js"></script>
