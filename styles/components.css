@@ -296,3 +296,66 @@ button.primary:hover {
   font-size: 13px;
   opacity: 0.85;
 }
+/* ================================
+   GOALS CARDS
+   ================================ */
+
+.goals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.goal-card {
+  padding: 16px;
+  border-radius: 16px;
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.14),
+    rgba(255,255,255,0.06)
+  );
+  border: 1px solid rgba(255,255,255,0.18);
+  box-shadow:
+    0 20px 40px rgba(0,0,0,0.5);
+  transition: transform 0.25s ease;
+}
+
+.goal-card:hover {
+  transform: translateY(-4px);
+}
+
+.goal-header {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.goal-subject {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.goal-topic {
+  font-size: 13px;
+  opacity: 0.75;
+}
+
+.goal-bar {
+  height: 6px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.goal-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #22d3ee, #4fc3f7);
+  transition: width 0.6s ease;
+}
+
+.goal-text {
+  font-size: 12px;
+  opacity: 0.8;
+}
