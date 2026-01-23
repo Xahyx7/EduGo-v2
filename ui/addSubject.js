@@ -9,7 +9,7 @@ export function setupAddSubject() {
   const cancelBtn = document.getElementById("cancelModal");
   const saveBtn = document.getElementById("saveSubject");
 
-  if (!addBtn) return;
+  if (!addBtn || !modal) return;
 
   addBtn.onclick = () => {
     modal.style.display = "flex";
@@ -20,10 +20,16 @@ export function setupAddSubject() {
   };
 
   saveBtn.onclick = () => {
-    const name = document.getElementById("subjectName").value.trim();
-    const units = Number(document.getElementById("subjectUnits").value);
+    const nameInput = document.getElementById("subjectName");
+    const unitsInput = document.getElementById("subjectUnits");
 
-    if (!name || !units) return;
+    const name = nameInput.value.trim();
+    const units = Number(unitsInput.value);
+
+    if (!name || units <= 0) {
+      alert("Enter subject name and units");
+      return;
+    }
 
     appState.subjects.push({
       id: Date.now().toString(),
@@ -33,7 +39,11 @@ export function setupAddSubject() {
       timeSpent: 0
     });
 
+    // reset inputs
+    nameInput.value = "";
+    unitsInput.value = "";
+
     modal.style.display = "none";
-    renderDashboard();
+    renderDashboard(); // 🔥 THIS IS CRITICAL
   };
 }
