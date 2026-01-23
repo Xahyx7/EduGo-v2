@@ -38,22 +38,53 @@ export function renderDashboard() {
       (subject.completedUnits / subject.totalUnits) * 100
     );
 
-    card.innerHTML = `
-      <h3>${subject.name}</h3>
+   const unitPercent = Math.min(
+  subject.completedUnits / subject.totalUnits,
+  1
+);
 
-      <p>Units: ${subject.completedUnits} / ${subject.totalUnits}</p>
+const radius = 24;
+const circumference = 2 * Math.PI * radius;
+const offset = circumference * (1 - unitPercent);
 
-      <p>Time studied: ${subject.timeSpent} min</p>
+card.innerHTML = `
+  <div class="subject-top">
+    <h3>${subject.name}</h3>
 
-      <div class="progress-bar">
-        <div class="progress-fill" style="width:${percent}%"></div>
-      </div>
+    <svg class="mini-ring" width="64" height="64">
+      <circle
+        cx="32"
+        cy="32"
+        r="${radius}"
+        stroke="rgba(255,255,255,0.15)"
+        stroke-width="6"
+        fill="none"
+      />
+      <circle
+        cx="32"
+        cy="32"
+        r="${radius}"
+        stroke="#22d3ee"
+        stroke-width="6"
+        fill="none"
+        stroke-linecap="round"
+        stroke-dasharray="${circumference}"
+        stroke-dashoffset="${offset}"
+        transform="rotate(-90 32 32)"
+      />
+    </svg>
+  </div>
 
-      <div class="unit-actions">
-        <button class="unit-btn minus">-1</button>
-        <button class="unit-btn plus">+1</button>
-      </div>
-    `;
+  <p class="subject-meta">
+    ${subject.completedUnits}/${subject.totalUnits} units • ${subject.timeSpent} min
+  </p>
+
+  <div class="unit-actions">
+    <button class="unit-btn minus">-1</button>
+    <button class="unit-btn plus">+1</button>
+  </div>
+`;
+
 
     // +1 unit
     card.querySelector(".plus").onclick = () => {
