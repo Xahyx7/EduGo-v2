@@ -35,3 +35,11 @@ export function decrementUnit(subjectId) {
     saveState(appState);
   }
 }
+// ADD STUDY TIME (from timer)
+export function addTimeToSubject(subjectId, minutes) {
+  const subject = appState.subjects.find(s => s.id === subjectId);
+  if (!subject) return;
+
+  subject.timeSpent += minutes;
+  saveState(appState);
+}
