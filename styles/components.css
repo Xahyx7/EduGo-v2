@@ -169,34 +169,30 @@ button.primary:hover {
    FLOATING FOCUS TIMER
    ================================ */
 
+/* ===== FLOATING TIMER (REFINED) ===== */
+
 .floating-timer {
   position: fixed;
-  bottom: 24px;
-  right: 24px;
-  width: 220px;
-  padding: 16px;
-  border-radius: 18px;
+  bottom: 28px;
+  right: 28px;
+  width: 260px;
+  padding: 18px;
 
   background: linear-gradient(
     180deg,
-    rgba(255,255,255,0.12),
-    rgba(255,255,255,0.05)
+    rgba(20,25,40,0.9),
+    rgba(10,15,30,0.85)
   );
-  backdrop-filter: blur(20px);
+
+  border-radius: 22px;
+  border: 1px solid rgba(255,255,255,0.18);
 
   box-shadow:
-    0 20px 50px rgba(0,0,0,0.6),
-    inset 0 0 0 1px rgba(255,255,255,0.12);
+    0 30px 80px rgba(0,0,0,0.75),
+    inset 0 0 0 1px rgba(255,255,255,0.06);
 
-  z-index: 1200;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.floating-timer:hover {
-  transform: translateY(-6px);
-  box-shadow:
-    0 30px 70px rgba(0,0,0,0.75),
-    inset 0 0 0 1px rgba(255,255,255,0.2);
+  backdrop-filter: blur(22px);
+  z-index: 1500;
 }
 
 .floating-header {
@@ -204,26 +200,39 @@ button.primary:hover {
   justify-content: space-between;
   align-items: center;
   font-size: 14px;
-  opacity: 0.8;
+  opacity: 0.85;
+  margin-bottom: 8px;
+}
+
+.floating-header span {
+  font-weight: 600;
 }
 
 .floating-time {
-  font-size: 32px;
+  font-size: 40px;
   text-align: center;
   margin: 12px 0;
+  letter-spacing: 1px;
 }
 
 .floating-actions {
   display: flex;
-  justify-content: space-between;
+  gap: 10px;
 }
 
 .floating-actions button {
   flex: 1;
-  margin: 0 4px;
-  border-radius: 10px;
+  height: 38px;
+  border-radius: 12px;
   font-size: 16px;
+  background: rgba(255,255,255,0.12);
+  color: #fff;
 }
+
+.floating-actions button:hover {
+  background: rgba(255,255,255,0.2);
+}
+
 
 /* Mini fullscreen button */
 .mini-btn {
