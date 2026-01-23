@@ -232,3 +232,32 @@ button.primary:hover {
   color: #e5e7eb;
   cursor: pointer;
 }
+/* ================================
+   SUBJECT MINI RINGS
+   ================================ */
+
+.subject-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.subject-meta {
+  font-size: 13px;
+  opacity: 0.75;
+  margin: 6px 0 12px;
+}
+
+/* Mini ring */
+.mini-ring {
+  filter: drop-shadow(0 0 6px rgba(34,211,238,0.4));
+}
+
+.subject-card:hover .mini-ring circle:last-child {
+  filter: drop-shadow(0 0 8px rgba(34,211,238,0.8));
+}
+
+/* Animate ring smoothly */
+.mini-ring circle:last-child {
+  transition: stroke-dashoffset 0.6s cubic-bezier(.4,0,.2,1);
+}
