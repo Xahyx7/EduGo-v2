@@ -3,11 +3,9 @@
 export const appState = {
   subjects: [],
   sessions: [],
-  settings: {
-    theme: "dark",
-    animations: true
-  },
-  meta: {
-    lastUpdated: Date.now()
+
+  goals: {
+    dailyMinutes: 60,
+    weeklyMinutes: 300
   }
 };
