@@ -14,7 +14,7 @@ export function setupFocusTimer() {
   const subjectSelect = document.getElementById("timerSubject");
   const display = document.getElementById("timerDisplay");
 
-  if (!startBtn || !pauseBtn || !stopBtn) return;
+ if (!startBtn || !pauseBtn || !stopBtn || !display) return;
 
   startBtn.onclick = () => {
     if (!subjectSelect.value) {
