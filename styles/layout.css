@@ -139,3 +139,16 @@ button:active {
     transition: none !important;
   }
 }
+/* ===== DENSITY FIX ===== */
+
+.top-grid {
+  align-items: stretch;
+}
+
+.card-large {
+  min-height: 260px;
+}
+
+section {
+  margin-bottom: 32px;
+}
