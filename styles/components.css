@@ -35,3 +35,31 @@ button:hover {
 button:active {
   transform: scale(0.97);
 }
+/* TODAY RING */
+
+.today-ring {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  margin: 0 auto;
+}
+
+.today-ring svg {
+  display: block;
+}
+
+#todayRingProgress {
+  transition: stroke-dashoffset 0.8s ease;
+  filter: drop-shadow(0 0 6px rgba(79,195,247,0.6));
+}
+
+.ring-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 600;
+  color: #e5e7eb;
+}
