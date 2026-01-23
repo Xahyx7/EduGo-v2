@@ -101,3 +101,41 @@ card.innerHTML = `
     grid.appendChild(card);
   });
 }
+export function renderGoalsPreview() {
+  const container = document.getElementById("goalsPreview");
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  const goals = appState.goals.filter(g => !g.completed);
+
+  if (goals.length === 0) {
+    container.innerHTML = `<p style="opacity:0.6">No goals for today</p>`;
+    return;
+  }
+
+  goals.forEach(goal => {
+    const card = document.createElement("div");
+    card.className = "goal-card";
+
+    const percent = Math.min(goal.progress / goal.target, 1) * 100;
+
+    card.innerHTML = `
+      <div class="goal-header">
+        <span class="goal-subject">${goal.subjectName}</span>
+        <span class="goal-topic">${goal.topic}</span>
+      </div>
+
+      <div class="goal-progress">
+        <div class="goal-bar">
+          <div class="goal-fill" style="width:${percent}%"></div>
+        </div>
+        <span class="goal-text">
+          ${goal.progress}/${goal.target} ${goal.type === "time" ? "min" : "units"}
+        </span>
+      </div>
+    `;
+
+    container.appendChild(card);
+  });
+}
