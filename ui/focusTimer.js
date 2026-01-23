@@ -1,6 +1,6 @@
 // ui/focusTimer.js
 
-import { addTimeToSubject } from "../state/reducers.js";
+import { addStudySession } from "../state/reducers.js";
 import { renderDashboard } from "./dashboard.js";
 
 let timerInterval = null;
@@ -14,7 +14,7 @@ export function setupFocusTimer() {
   const subjectSelect = document.getElementById("timerSubject");
   const display = document.getElementById("timerDisplay");
 
-  if (!startBtn) return;
+  if (!startBtn || !pauseBtn || !stopBtn) return;
 
   startBtn.onclick = () => {
     if (!subjectSelect.value) {
@@ -41,8 +41,14 @@ export function setupFocusTimer() {
     clearInterval(timerInterval);
     timerInterval = null;
 
-    if (activeSubjectId && seconds > 0) {
-      addTimeToSubject(activeSubjectId, Math.floor(seconds / 60));
+    const minutes = Math.floor(seconds / 60);
+
+    if (activeSubjectId && minutes > 0) {
+      // ✅ THIS UPDATES:
+      // - subject time
+      // - daily goal
+      // - weekly goal
+      addStudySession(activeSubjectId, minutes);
       renderDashboard();
     }
 
