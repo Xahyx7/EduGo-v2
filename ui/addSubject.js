@@ -1,26 +1,39 @@
 // ui/addSubject.js
 
-import { addSubject } from "../state/reducers.js";
+import { appState } from "../state/state.js";
 import { renderDashboard } from "./dashboard.js";
 
 export function setupAddSubject() {
-  const btn = document.getElementById("addSubjectBtn");
-  if (!btn) return;
+  const addBtn = document.getElementById("addSubjectBtn");
+  const modal = document.getElementById("subjectModal");
+  const cancelBtn = document.getElementById("cancelModal");
+  const saveBtn = document.getElementById("saveSubject");
 
-  btn.addEventListener("click", () => {
-    const name = prompt("Enter subject name:");
-    if (!name) return;
+  if (!addBtn) return;
 
-    const totalUnits = prompt("Enter total units:");
-    if (!totalUnits || isNaN(totalUnits)) return;
+  addBtn.onclick = () => {
+    modal.style.display = "flex";
+  };
 
-    addSubject({
+  cancelBtn.onclick = () => {
+    modal.style.display = "none";
+  };
+
+  saveBtn.onclick = () => {
+    const name = document.getElementById("subjectName").value.trim();
+    const units = Number(document.getElementById("subjectUnits").value);
+
+    if (!name || !units) return;
+
+    appState.subjects.push({
+      id: Date.now().toString(),
       name,
-      totalUnits: Number(totalUnits),
+      totalUnits: units,
       completedUnits: 0,
       timeSpent: 0
     });
 
+    modal.style.display = "none";
     renderDashboard();
-  });
+  };
 }
