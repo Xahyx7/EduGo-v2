@@ -165,3 +165,70 @@ button.primary:hover {
 .subject-card:hover {
   transform: translateY(-8px) scale(1.01);
 }
+/* ================================
+   FLOATING FOCUS TIMER
+   ================================ */
+
+.floating-timer {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 220px;
+  padding: 16px;
+  border-radius: 18px;
+
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.12),
+    rgba(255,255,255,0.05)
+  );
+  backdrop-filter: blur(20px);
+
+  box-shadow:
+    0 20px 50px rgba(0,0,0,0.6),
+    inset 0 0 0 1px rgba(255,255,255,0.12);
+
+  z-index: 1200;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.floating-timer:hover {
+  transform: translateY(-6px);
+  box-shadow:
+    0 30px 70px rgba(0,0,0,0.75),
+    inset 0 0 0 1px rgba(255,255,255,0.2);
+}
+
+.floating-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.floating-time {
+  font-size: 32px;
+  text-align: center;
+  margin: 12px 0;
+}
+
+.floating-actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+.floating-actions button {
+  flex: 1;
+  margin: 0 4px;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+/* Mini fullscreen button */
+.mini-btn {
+  background: none;
+  border: none;
+  color: #e5e7eb;
+  cursor: pointer;
+}
