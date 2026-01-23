@@ -118,3 +118,48 @@
   background: #374151;
   color: #fff;
 }
+/* FOCUS MODE */
+
+.focus-overlay {
+  position: fixed;
+  inset: 0;
+  background: #020617;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.focus-box {
+  text-align: center;
+  color: white;
+}
+
+.focus-time {
+  font-size: 64px;
+  margin: 20px 0;
+  color: #4fc3f7;
+}
+
+.focus-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.focus-actions button {
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.exit-focus {
+  margin-top: 20px;
+  background: #374151;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
