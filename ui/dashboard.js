@@ -7,13 +7,29 @@ export function renderDashboard() {
   const grid = document.getElementById("subjectGrid");
   if (!grid) return;
 
+  // Clear dashboard
   grid.innerHTML = "";
 
+  // ---------- UPDATE TIMER SUBJECT DROPDOWN ----------
+  const subjectSelect = document.getElementById("timerSubject");
+  if (subjectSelect) {
+    subjectSelect.innerHTML = `<option value="">Select Subject</option>`;
+
+    appState.subjects.forEach(subject => {
+      const option = document.createElement("option");
+      option.value = subject.id;
+      option.textContent = subject.name;
+      subjectSelect.appendChild(option);
+    });
+  }
+
+  // ---------- NO SUBJECT CASE ----------
   if (appState.subjects.length === 0) {
     grid.innerHTML = `<p style="color:white;">No subjects added yet</p>`;
     return;
   }
 
+  // ---------- RENDER SUBJECT CARDS ----------
   appState.subjects.forEach(subject => {
     const card = document.createElement("div");
     card.className = "subject-card";
@@ -27,6 +43,8 @@ export function renderDashboard() {
 
       <p>Units: ${subject.completedUnits} / ${subject.totalUnits}</p>
 
+      <p>Time studied: ${subject.timeSpent} min</p>
+
       <div class="progress-bar">
         <div class="progress-fill" style="width:${percent}%"></div>
       </div>
@@ -37,12 +55,13 @@ export function renderDashboard() {
       </div>
     `;
 
-    // Button actions
+    // +1 unit
     card.querySelector(".plus").onclick = () => {
       incrementUnit(subject.id);
       renderDashboard();
     };
 
+    // -1 unit
     card.querySelector(".minus").onclick = () => {
       decrementUnit(subject.id);
       renderDashboard();
