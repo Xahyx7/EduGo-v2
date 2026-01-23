@@ -28,9 +28,32 @@
       <!-- TODAY PROGRESS (RING PLACEHOLDER) -->
       <div class="card card-large">
         <h3>Today</h3>
-        <div class="ring-placeholder">
-          <span>Progress Ring</span>
-        </div>
+       <div class="today-ring">
+  <svg width="140" height="140">
+    <circle
+      cx="70"
+      cy="70"
+      r="52"
+      stroke="rgba(255,255,255,0.1)"
+      stroke-width="10"
+      fill="none"
+    />
+    <circle
+      id="todayRingProgress"
+      cx="70"
+      cy="70"
+      r="52"
+      stroke="#4fc3f7"
+      stroke-width="10"
+      fill="none"
+      stroke-linecap="round"
+      transform="rotate(-90 70 70)"
+    />
+  </svg>
+
+  <div id="todayRingLabel" class="ring-label">0%</div>
+</div>
+
       </div>
 
       <!-- FOCUS TIMER CARD -->
