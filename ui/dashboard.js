@@ -1,6 +1,6 @@
 // ui/dashboard.js
 
-import { appState } from "../state/state.js";
+import { appState, persistState } from "../state/state.js";
 
 export function renderDashboard() {
   renderSubjects();
@@ -40,6 +40,7 @@ function renderSubjects() {
     card.querySelector(".plus").onclick = () => {
       if (subject.completedUnits < subject.totalUnits) {
         subject.completedUnits++;
+        persistState(); // ✅ SAVE
         renderDashboard();
       }
     };
@@ -47,6 +48,7 @@ function renderSubjects() {
     card.querySelector(".minus").onclick = () => {
       if (subject.completedUnits > 0) {
         subject.completedUnits--;
+        persistState(); // ✅ SAVE
         renderDashboard();
       }
     };
