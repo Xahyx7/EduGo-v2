@@ -10,7 +10,6 @@ export function openAnalyticsFullscreen() {
     `
     <div id="analyticsOverlay" class="analytics-overlay">
       <div class="analytics-shell">
-
         <header class="analytics-header">
           <h2>Analytics</h2>
           <button id="closeAnalytics">✕</button>
@@ -23,7 +22,6 @@ export function openAnalyticsFullscreen() {
         </nav>
 
         <section id="analyticsContent" class="analytics-content"></section>
-
       </div>
     </div>
     `
@@ -45,7 +43,6 @@ function switchTab(tab) {
   document
     .querySelectorAll(".analytics-tabs button")
     .forEach(b => b.classList.remove("active"));
-
   document.getElementById(`tab${capitalize(tab)}`).classList.add("active");
 
   if (tab === "daily") renderDaily();
@@ -65,15 +62,13 @@ function renderDaily() {
 
   const total = sessions.reduce((a, b) => a + b.minutes, 0);
 
-  // SUBJECT BREAKDOWN
   const subjectMap = {};
   sessions.forEach(s => {
     subjectMap[s.subjectId] = (subjectMap[s.subjectId] || 0) + s.minutes;
   });
 
-  // GOALS
-  const completedGoals = appState.goals.filter(g => g.completed);
-  const pendingGoals = appState.goals.filter(g => !g.completed);
+  const values = Object.values(subjectMap);
+  const max = Math.max(...values, 1);
 
   box.innerHTML = `
     <div class="analytics-card big">
@@ -84,13 +79,13 @@ function renderDaily() {
     <div class="analytics-card">
       <h3>By Subject</h3>
       ${
-        Object.keys(subjectMap).length === 0
-          ? "<p>No study yet</p>"
+        values.length === 0
+          ? "<p class='muted'>No study yet</p>"
           : Object.entries(subjectMap)
               .map(([id, min]) => {
                 const name =
                   appState.subjects.find(s => s.id === id)?.name || "Unknown";
-                return barRow(name, min);
+                return barRow(name, min, max);
               })
               .join("")
       }
@@ -98,21 +93,14 @@ function renderDaily() {
 
     <div class="analytics-card">
       <h3>Goals Today</h3>
-
       <strong>Completed</strong>
       ${
-        completedGoals.length
-          ? completedGoals.map(g => `<div>✔ ${g.topic}</div>`).join("")
-          : "<p>None</p>"
+        appState.goals.filter(g => g.completed).map(g => `<div>✔ ${g.topic}</div>`).join("") || "<p class='muted'>None</p>"
       }
-
       <br/>
-
       <strong>Pending</strong>
       ${
-        pendingGoals.length
-          ? pendingGoals.map(g => `<div>○ ${g.topic}</div>`).join("")
-          : "<p>None</p>"
+        appState.goals.filter(g => !g.completed).map(g => `<div>○ ${g.topic}</div>`).join("") || "<p class='muted'>None</p>"
       }
     </div>
   `;
@@ -122,32 +110,32 @@ function renderDaily() {
 
 function renderWeekly() {
   const box = document.getElementById("analyticsContent");
-
-  const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-  const weekMap = {};
-  weekDays.forEach(d => (weekMap[d] = 0));
+  const weekDays = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+  const weekMap = Object.fromEntries(weekDays.map(d => [d, 0]));
 
   const now = new Date();
   const monday = new Date(now);
   monday.setDate(now.getDate() - ((now.getDay() + 6) % 7));
-  monday.setHours(0, 0, 0, 0);
+  monday.setHours(0,0,0,0);
 
   const sunday = new Date(monday);
   sunday.setDate(monday.getDate() + 6);
-  sunday.setHours(23, 59, 59, 999);
+  sunday.setHours(23,59,59,999);
 
   appState.sessions.forEach(s => {
     const t = new Date(s.time);
     if (t >= monday && t <= sunday) {
-      const day = t.toLocaleDateString("en-US", { weekday: "short" });
-      weekMap[day] += s.minutes;
+      const d = t.toLocaleDateString("en-US",{weekday:"short"});
+      weekMap[d] += s.minutes;
     }
   });
+
+  const max = Math.max(...Object.values(weekMap), 1);
 
   box.innerHTML = `
     <div class="analytics-card big">
       <h3>This Week</h3>
-      ${weekDays.map(d => barRow(d, weekMap[d])).join("")}
+      ${weekDays.map(d => barRow(d, weekMap[d], max)).join("")}
     </div>
   `;
 }
@@ -156,46 +144,40 @@ function renderWeekly() {
 
 function renderYearly() {
   const box = document.getElementById("analyticsContent");
-
-  const months = [
-    "Jan","Feb","Mar","Apr","May","Jun",
-    "Jul","Aug","Sep","Oct","Nov","Dec"
-  ];
-
+  const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
   const year = new Date().getFullYear();
-  const monthMap = {};
-  months.forEach(m => (monthMap[m] = 0));
+  const map = Object.fromEntries(months.map(m => [m, 0]));
 
   appState.sessions.forEach(s => {
     const d = new Date(s.time);
     if (d.getFullYear() === year) {
-      const m = months[d.getMonth()];
-      monthMap[m] += s.minutes;
+      map[months[d.getMonth()]] += s.minutes;
     }
   });
+
+  const max = Math.max(...Object.values(map), 1);
 
   box.innerHTML = `
     <div class="analytics-card big">
       <h3>${year} Overview</h3>
-      ${months.map(m => barRow(m, monthMap[m])).join("")}
+      ${months.map(m => barRow(m, map[m], max)).join("")}
     </div>
   `;
 }
 
 /* ================= HELPERS ================= */
 
-function barRow(label, minutes) {
+function barRow(label, minutes, max) {
+  const pct = Math.round((minutes / max) * 100);
   return `
     <div class="bar-row">
-      <span>${label}</span>
+      <span class="bar-label">${label}</span>
       <div class="bar">
-        <div class="bar-fill" style="width:${minutes * 3}px"></div>
+        <div class="bar-fill" style="--w:${pct}%"></div>
       </div>
-      <span>${minutes}m</span>
+      <span class="bar-value">${minutes}m</span>
     </div>
   `;
 }
 
-function capitalize(str) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
-}
+function capitalize(s){ return s[0].toUpperCase()+s.slice(1); }
