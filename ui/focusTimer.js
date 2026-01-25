@@ -1,63 +1,63 @@
 // ui/focusTimer.js
 
-import { addStudySession } from "../state/reducers.js";
-import { renderDashboard } from "./dashboard.js";
+import { appState } from "../state/state.js";
+import { renderTodayRing } from "./todayRing.js";
 
-let timerInterval = null;
+let timer = null;
 let seconds = 0;
 let activeSubjectId = null;
 
 export function setupFocusTimer() {
-  const startBtn = document.getElementById("startTimer");
-  const pauseBtn = document.getElementById("pauseTimer");
-  const stopBtn = document.getElementById("stopTimer");
-  const subjectSelect = document.getElementById("timerSubject");
+  const start = document.getElementById("startTimer");
+  const pause = document.getElementById("pauseTimer");
+  const stop = document.getElementById("stopTimer");
   const display = document.getElementById("timerDisplay");
+  const select = document.getElementById("timerSubject");
 
- if (!startBtn || !pauseBtn || !stopBtn || !display) return;
+  if (!start || !display) return;
 
-  startBtn.onclick = () => {
-    if (!subjectSelect.value) {
-      alert("Select a subject first");
+  start.onclick = () => {
+    if (!select.value) {
+      alert("Select subject");
       return;
     }
 
-    activeSubjectId = subjectSelect.value;
+    activeSubjectId = select.value;
 
-    if (timerInterval) return;
+    if (timer) return;
 
-    timerInterval = setInterval(() => {
+    timer = setInterval(() => {
       seconds++;
-      display.textContent = formatTime(seconds);
+      display.textContent = format(seconds);
     }, 1000);
   };
 
-  pauseBtn.onclick = () => {
-    clearInterval(timerInterval);
-    timerInterval = null;
+  pause.onclick = () => {
+    clearInterval(timer);
+    timer = null;
   };
 
-  stopBtn.onclick = () => {
-    clearInterval(timerInterval);
-    timerInterval = null;
+  stop.onclick = () => {
+    clearInterval(timer);
+    timer = null;
 
-    const minutes = Math.floor(seconds / 60);
+    if (activeSubjectId && seconds > 0) {
+      const minutes = Math.floor(seconds / 60);
 
-    if (activeSubjectId && minutes > 0) {
-      // ✅ THIS UPDATES:
-      // - subject time
-      // - daily goal
-      // - weekly goal
-      addStudySession(activeSubjectId, minutes);
-      renderDashboard();
+      appState.sessions.push({
+        subjectId: activeSubjectId,
+        minutes,
+        time: Date.now()
+      });
     }
 
     seconds = 0;
     display.textContent = "00:00";
+    renderTodayRing();
   };
 }
 
-function formatTime(sec) {
+function format(sec) {
   const m = String(Math.floor(sec / 60)).padStart(2, "0");
   const s = String(sec % 60).padStart(2, "0");
   return `${m}:${s}`;
