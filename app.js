@@ -6,6 +6,7 @@ import { setupFocusTimer } from "./ui/focusTimer.js";
 import { renderTodayRing } from "./ui/todayRing.js";
 import { setupGoals } from "./ui/goals.js";
 import { renderGoals } from "./ui/renderGoals.js";
+import { setupDailyAnalyticsCard } from "./ui/analyticsCard.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   renderDashboard();
@@ -15,4 +16,5 @@ document.addEventListener("DOMContentLoaded", () => {
   setupAddSubject();
   setupGoals();
   setupFocusTimer();
+  setupDailyAnalyticsCard();
 });
