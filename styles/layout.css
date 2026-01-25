@@ -22,10 +22,14 @@
 
 body {
   margin: 0;
-  background: radial-gradient(circle at top, #0b1220, #020617);
-  font-family: "Segoe UI", system-ui, sans-serif;
-  color: #e5e7eb;
+  background:
+    radial-gradient(circle at 20% 20%, #0f172a, transparent 40%),
+    radial-gradient(circle at 80% 0%, #020617, transparent 40%),
+    var(--bg-main);
+  color: var(--text-main);
+  font-family: "Inter", system-ui, sans-serif;
 }
+
 
 h1, h2 {
   letter-spacing: 0.5px;
