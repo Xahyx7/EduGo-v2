@@ -18,11 +18,40 @@ function renderSubjects() {
     return;
   }
 
-  appState.subjects.forEach(s => {
-    const div = document.createElement("div");
-    div.className = "subject-card";
-    div.textContent = `${s.name} (${s.completedUnits}/${s.totalUnits})`;
-    grid.appendChild(div);
+  appState.subjects.forEach(subject => {
+    const card = document.createElement("div");
+    card.className = "subject-card";
+
+    const percent =
+      subject.totalUnits === 0
+        ? 0
+        : Math.round((subject.completedUnits / subject.totalUnits) * 100);
+
+    card.innerHTML = `
+      <h3>${subject.name}</h3>
+      <p>${subject.completedUnits}/${subject.totalUnits} units (${percent}%)</p>
+
+      <div class="unit-actions">
+        <button class="minus">-1</button>
+        <button class="plus">+1</button>
+      </div>
+    `;
+
+    card.querySelector(".plus").onclick = () => {
+      if (subject.completedUnits < subject.totalUnits) {
+        subject.completedUnits++;
+        renderDashboard();
+      }
+    };
+
+    card.querySelector(".minus").onclick = () => {
+      if (subject.completedUnits > 0) {
+        subject.completedUnits--;
+        renderDashboard();
+      }
+    };
+
+    grid.appendChild(card);
   });
 }
 
@@ -32,10 +61,10 @@ function syncTimerSubjects() {
 
   select.innerHTML = "<option value=''>Select subject</option>";
 
-  appState.subjects.forEach(s => {
+  appState.subjects.forEach(subject => {
     const opt = document.createElement("option");
-    opt.value = s.id;
-    opt.textContent = s.name;
+    opt.value = subject.id;
+    opt.textContent = subject.name;
     select.appendChild(opt);
   });
 }
