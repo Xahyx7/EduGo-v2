@@ -359,3 +359,25 @@ button.primary:hover {
   font-size: 12px;
   opacity: 0.8;
 }
+/* GOAL PROGRESS */
+
+.goal-card {
+  padding: 14px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.08);
+  margin-bottom: 12px;
+}
+
+.goal-bar {
+  height: 6px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 999px;
+  margin: 6px 0;
+  overflow: hidden;
+}
+
+.goal-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #22d3ee, #4fc3f7);
+  transition: width 0.4s ease;
+}
