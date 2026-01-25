@@ -30,7 +30,6 @@ export function openAnalyticsFullscreen() {
   );
 
   document.getElementById("closeAnalytics").onclick = closeAnalyticsFullscreen;
-
   document.getElementById("tabDaily").onclick = () => switchTab("daily");
   document.getElementById("tabWeekly").onclick = () => switchTab("weekly");
   document.getElementById("tabYearly").onclick = () => switchTab("yearly");
@@ -66,10 +65,15 @@ function renderDaily() {
 
   const total = sessions.reduce((a, b) => a + b.minutes, 0);
 
+  // SUBJECT BREAKDOWN
   const subjectMap = {};
   sessions.forEach(s => {
     subjectMap[s.subjectId] = (subjectMap[s.subjectId] || 0) + s.minutes;
   });
+
+  // GOALS
+  const completedGoals = appState.goals.filter(g => g.completed);
+  const pendingGoals = appState.goals.filter(g => !g.completed);
 
   box.innerHTML = `
     <div class="analytics-card big">
@@ -89,6 +93,26 @@ function renderDaily() {
                 return barRow(name, min);
               })
               .join("")
+      }
+    </div>
+
+    <div class="analytics-card">
+      <h3>Goals Today</h3>
+
+      <strong>Completed</strong>
+      ${
+        completedGoals.length
+          ? completedGoals.map(g => `<div>✔ ${g.topic}</div>`).join("")
+          : "<p>None</p>"
+      }
+
+      <br/>
+
+      <strong>Pending</strong>
+      ${
+        pendingGoals.length
+          ? pendingGoals.map(g => `<div>○ ${g.topic}</div>`).join("")
+          : "<p>None</p>"
       }
     </div>
   `;
