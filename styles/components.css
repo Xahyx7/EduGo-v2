@@ -381,3 +381,37 @@ button.primary:hover {
   background: linear-gradient(90deg, #22d3ee, #4fc3f7);
   transition: width 0.4s ease;
 }
+/* GOAL HEADER & CHECK */
+
+.goal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.goal-check {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #4fc3f7;
+}
+
+.goal-check:hover {
+  transform: scale(1.1);
+}
+
+.goal-completed {
+  opacity: 0.55;
+}
+
+.goal-topic {
+  font-size: 13px;
+  opacity: 0.75;
+  margin-bottom: 4px;
+}
+
+.goal-text {
+  font-size: 12px;
+  opacity: 0.85;
+}
