@@ -7,11 +7,13 @@ import { renderTodayRing } from "./ui/todayRing.js";
 import { setupGoals } from "./ui/goals.js";
 import { renderGoals } from "./ui/renderGoals.js";
 import { setupDailyAnalyticsCard } from "./ui/analyticsCard.js";
+import { renderStreaks } from "./ui/streaks.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   renderDashboard();
   renderGoals();
   renderTodayRing();
+  renderStreaks();
 
   setupAddSubject();
   setupGoals();
