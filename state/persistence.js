@@ -1,17 +1,20 @@
 // state/persistence.js
-import { appState } from "./state.js";
 
-const KEY = "edugo_state_v2";
-
-export function saveState(state) {
-  localStorage.setItem(KEY, JSON.stringify(state));
-}
+const KEY = "edugo_state";
 
 export function loadState() {
-  const saved = localStorage.getItem(KEY);
-  if (!saved) return;
+  try {
+    const raw = localStorage.getItem(KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
 
-  const parsed = JSON.parse(saved);
-
-  Object.assign(appState, parsed);
+export function saveState(state) {
+  try {
+    localStorage.setItem(KEY, JSON.stringify(state));
+  } catch {
+    // ignore write errors
+  }
 }
