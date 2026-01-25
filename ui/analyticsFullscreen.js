@@ -19,7 +19,7 @@ export function openAnalyticsFullscreen() {
         <nav class="analytics-tabs">
           <button id="tabDaily" class="active">Daily</button>
           <button id="tabWeekly">Weekly</button>
-          <button id="tabYearly" disabled>Yearly</button>
+          <button id="tabYearly">Yearly</button>
         </nav>
 
         <section id="analyticsContent" class="analytics-content"></section>
@@ -33,6 +33,7 @@ export function openAnalyticsFullscreen() {
 
   document.getElementById("tabDaily").onclick = () => switchTab("daily");
   document.getElementById("tabWeekly").onclick = () => switchTab("weekly");
+  document.getElementById("tabYearly").onclick = () => switchTab("yearly");
 
   renderDaily();
 }
@@ -42,13 +43,15 @@ function closeAnalyticsFullscreen() {
 }
 
 function switchTab(tab) {
-  document.querySelectorAll(".analytics-tabs button")
+  document
+    .querySelectorAll(".analytics-tabs button")
     .forEach(b => b.classList.remove("active"));
 
   document.getElementById(`tab${capitalize(tab)}`).classList.add("active");
 
   if (tab === "daily") renderDaily();
   if (tab === "weekly") renderWeekly();
+  if (tab === "yearly") renderYearly();
 }
 
 /* ================= DAILY ================= */
@@ -79,11 +82,13 @@ function renderDaily() {
       ${
         Object.keys(subjectMap).length === 0
           ? "<p>No study yet</p>"
-          : Object.entries(subjectMap).map(([id, min]) => {
-              const name =
-                appState.subjects.find(s => s.id === id)?.name || "Unknown";
-              return barRow(name, min);
-            }).join("")
+          : Object.entries(subjectMap)
+              .map(([id, min]) => {
+                const name =
+                  appState.subjects.find(s => s.id === id)?.name || "Unknown";
+                return barRow(name, min);
+              })
+              .join("")
       }
     </div>
   `;
@@ -96,8 +101,7 @@ function renderWeekly() {
 
   const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   const weekMap = {};
-
-  weekDays.forEach(d => weekMap[d] = 0);
+  weekDays.forEach(d => (weekMap[d] = 0));
 
   const now = new Date();
   const monday = new Date(now);
@@ -120,6 +124,36 @@ function renderWeekly() {
     <div class="analytics-card big">
       <h3>This Week</h3>
       ${weekDays.map(d => barRow(d, weekMap[d])).join("")}
+    </div>
+  `;
+}
+
+/* ================= YEARLY ================= */
+
+function renderYearly() {
+  const box = document.getElementById("analyticsContent");
+
+  const months = [
+    "Jan","Feb","Mar","Apr","May","Jun",
+    "Jul","Aug","Sep","Oct","Nov","Dec"
+  ];
+
+  const year = new Date().getFullYear();
+  const monthMap = {};
+  months.forEach(m => (monthMap[m] = 0));
+
+  appState.sessions.forEach(s => {
+    const d = new Date(s.time);
+    if (d.getFullYear() === year) {
+      const m = months[d.getMonth()];
+      monthMap[m] += s.minutes;
+    }
+  });
+
+  box.innerHTML = `
+    <div class="analytics-card big">
+      <h3>${year} Overview</h3>
+      ${months.map(m => barRow(m, monthMap[m])).join("")}
     </div>
   `;
 }
