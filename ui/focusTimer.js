@@ -1,6 +1,6 @@
 // ui/focusTimer.js
 
-import { appState } from "../state/state.js";
+import { appState, persistState } from "../state/state.js";
 import { renderTodayRing } from "./todayRing.js";
 
 let timer = null;
@@ -14,16 +14,10 @@ export function setupFocusTimer() {
   const display = document.getElementById("timerDisplay");
   const select = document.getElementById("timerSubject");
 
-  if (!start || !display) return;
-
   start.onclick = () => {
-    if (!select.value) {
-      alert("Select subject");
-      return;
-    }
+    if (!select.value) return alert("Select subject");
 
     activeSubjectId = select.value;
-
     if (timer) return;
 
     timer = setInterval(() => {
@@ -42,13 +36,13 @@ export function setupFocusTimer() {
     timer = null;
 
     if (activeSubjectId && seconds > 0) {
-      const minutes = Math.floor(seconds / 60);
-
       appState.sessions.push({
         subjectId: activeSubjectId,
-        minutes,
+        minutes: Math.floor(seconds / 60),
         time: Date.now()
       });
+
+      persistState(); // ✅ SAVE
     }
 
     seconds = 0;
