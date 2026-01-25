@@ -2,6 +2,7 @@
 
 import { appState, persistState } from "../state/state.js";
 import { renderGoals } from "./renderGoals.js";
+import { renderTodayRing } from "./todayRing.js";
 
 export function enterFocusMode(goalId) {
   appState.activeGoalId = goalId;
@@ -10,7 +11,9 @@ export function enterFocusMode(goalId) {
   const goal = appState.goals.find(g => g.id === goalId);
   if (!goal) return;
 
-  document.body.innerHTML += `
+  document.body.insertAdjacentHTML(
+    "beforeend",
+    `
     <div id="focusOverlay" class="focus-overlay">
       <div class="focus-card">
         <h2>${goal.subjectName}</h2>
@@ -26,7 +29,8 @@ export function enterFocusMode(goalId) {
         </div>
       </div>
     </div>
-  `;
+    `
+  );
 
   setupFocusModeTimer();
 }
@@ -39,6 +43,7 @@ function setupFocusModeTimer() {
 
   document.getElementById("focusStart").onclick = () => {
     if (timer) return;
+
     timer = setInterval(() => {
       seconds++;
       display.textContent = format(seconds);
@@ -58,17 +63,27 @@ function setupFocusModeTimer() {
     const goal = appState.goals.find(g => g.id === appState.activeGoalId);
 
     if (goal && minutes > 0) {
+      // 🔥 UPDATE GOAL
       goal.progress += minutes;
       if (goal.progress >= goal.target) {
         goal.progress = goal.target;
         goal.completed = true;
       }
+
+      // 🔥 UPDATE TODAY RING (SESSION)
+      appState.sessions.push({
+        subjectId: goal.subjectId,
+        minutes,
+        time: Date.now()
+      });
+
+      persistState();
+      renderGoals();
+      renderTodayRing();
     }
 
-    persistState();
     seconds = 0;
     display.textContent = "00:00";
-    renderGoals();
   };
 
   document.getElementById("focusExit").onclick = () => {
