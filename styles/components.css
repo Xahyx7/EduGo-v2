@@ -618,3 +618,34 @@ button.primary:hover {
   font-size: 40px;
   letter-spacing: .5px;
 }
+/* GOAL ANALYTICS */
+
+.goal-analytics-row {
+  margin-top: 10px;
+}
+
+.goal-bars {
+  display: flex;
+  height: 22px;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.goal-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.goal-bar.completed {
+  background: linear-gradient(90deg, #22c55e, #4ade80);
+  color: #000;
+}
+
+.goal-bar.pending {
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+}
