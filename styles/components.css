@@ -98,10 +98,11 @@ button:active {
 
 
 /* Subtle idle breathing */
-@keyframes breathe {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-2px); }
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
 }
+
 
 .card-large {
   animation: breathe 6s ease-in-out infinite;
