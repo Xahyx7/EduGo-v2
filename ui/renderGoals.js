@@ -1,6 +1,7 @@
 // ui/renderGoals.js
 
 import { appState, persistState } from "../state/state.js";
+import { enterFocusMode } from "./focusMode.js";
 
 export function renderGoals() {
   const box = document.getElementById("goalsPreview");
@@ -20,9 +21,10 @@ export function renderGoals() {
     card.innerHTML = `
       <div class="goal-header">
         <strong>${goal.subjectName}</strong>
-        <button class="goal-check">
-          ${goal.completed ? "✔" : "○"}
-        </button>
+        <div>
+          <button class="goal-focus">🎯</button>
+          <button class="goal-check">${goal.completed ? "✔" : "○"}</button>
+        </div>
       </div>
 
       <div class="goal-topic">${goal.topic}</div>
@@ -33,26 +35,23 @@ export function renderGoals() {
 
       <div class="goal-text">
         ${goal.progress}/${goal.target} ${goal.type}
-        ${goal.completed ? " (Completed)" : ""}
       </div>
     `;
 
-    // ✔ Manual completion
+    // Manual completion
     card.querySelector(".goal-check").onclick = () => {
       goal.completed = !goal.completed;
-
-      // if manually completed early, snap progress to target
-      if (goal.completed) {
-        goal.progress = goal.target;
-      }
-
+      if (goal.completed) goal.progress = goal.target;
       persistState();
       renderGoals();
     };
 
-    if (goal.completed) {
-      card.classList.add("goal-completed");
-    }
+    // 🔥 ENTER FOCUS MODE
+    card.querySelector(".goal-focus").onclick = () => {
+      enterFocusMode(goal.id);
+    };
+
+    if (goal.completed) card.classList.add("goal-completed");
 
     box.appendChild(card);
   });
