@@ -142,15 +142,73 @@ function renderGoalAnalytics() {
 
 function renderWeekly() {
   const box = document.getElementById("analyticsContent");
-  box.innerHTML = `<p class="muted">Weekly analytics already implemented</p>`;
+
+  const weekDays = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+  const weekMap = Object.fromEntries(weekDays.map(d => [d, 0]));
+
+  const now = new Date();
+  const monday = new Date(now);
+  monday.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+  monday.setHours(0,0,0,0);
+
+  const sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
+  sunday.setHours(23,59,59,999);
+
+  appState.sessions.forEach(s => {
+    const t = new Date(s.time);
+    if (t >= monday && t <= sunday) {
+      const d = t.toLocaleDateString("en-US",{weekday:"short"});
+      weekMap[d] += s.minutes;
+    }
+  });
+
+  const max = Math.max(...Object.values(weekMap), 1);
+
+  box.innerHTML = `
+    <div class="analytics-card big">
+      <h3>This Week</h3>
+      ${weekDays.map(d => barRow(d, weekMap[d], max)).join("")}
+    </div>
+  `;
 }
+
 
 /* ================= YEARLY (UNCHANGED) ================= */
 
-function renderYearly() {
+function renderWeekly() {
   const box = document.getElementById("analyticsContent");
-  box.innerHTML = `<p class="muted">Yearly analytics already implemented</p>`;
+
+  const weekDays = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+  const weekMap = Object.fromEntries(weekDays.map(d => [d, 0]));
+
+  const now = new Date();
+  const monday = new Date(now);
+  monday.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+  monday.setHours(0,0,0,0);
+
+  const sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
+  sunday.setHours(23,59,59,999);
+
+  appState.sessions.forEach(s => {
+    const t = new Date(s.time);
+    if (t >= monday && t <= sunday) {
+      const d = t.toLocaleDateString("en-US",{weekday:"short"});
+      weekMap[d] += s.minutes;
+    }
+  });
+
+  const max = Math.max(...Object.values(weekMap), 1);
+
+  box.innerHTML = `
+    <div class="analytics-card big">
+      <h3>This Week</h3>
+      ${weekDays.map(d => barRow(d, weekMap[d], max)).join("")}
+    </div>
+  `;
 }
+
 
 /* ================= HELPERS ================= */
 
