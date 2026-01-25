@@ -14,7 +14,5 @@ export function loadState() {
 export function saveState(state) {
   try {
     localStorage.setItem(KEY, JSON.stringify(state));
-  } catch {
-    // ignore write errors
-  }
+  } catch {}
 }
