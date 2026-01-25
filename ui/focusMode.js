@@ -1,79 +1,81 @@
 // ui/focusMode.js
 
-import { addTimeToSubject } from "../state/reducers.js";
-import { renderDashboard } from "./dashboard.js";
+import { appState, persistState } from "../state/state.js";
+import { renderGoals } from "./renderGoals.js";
 
-let interval = null;
-let seconds = 0;
-let activeSubjectId = null;
+export function enterFocusMode(goalId) {
+  appState.activeGoalId = goalId;
+  persistState();
 
+  const goal = appState.goals.find(g => g.id === goalId);
+  if (!goal) return;
 
-export function setupFocusMode() {
-  const openBtn = document.getElementById("enterFocusMode");
-  const overlay = document.getElementById("focusOverlay");
+  document.body.innerHTML += `
+    <div id="focusOverlay" class="focus-overlay">
+      <div class="focus-card">
+        <h2>${goal.subjectName}</h2>
+        <h3>${goal.topic}</h3>
 
-  // 🛑 If focus mode UI is not present, DO NOTHING
-  if (!openBtn || !overlay) {
-    return;
-  }
+        <div id="focusTimerDisplay" class="focus-time">00:00</div>
 
-  const closeBtn = document.getElementById("exitFocus");
-  const startBtn = document.getElementById("focusStart");
-  const pauseBtn = document.getElementById("focusPause");
-  const stopBtn = document.getElementById("focusStop");
+        <div class="focus-actions">
+          <button id="focusStart">Start</button>
+          <button id="focusPause">Pause</button>
+          <button id="focusStop">Stop</button>
+          <button id="focusExit">Exit</button>
+        </div>
+      </div>
+    </div>
+  `;
 
-  const subjectSelect = document.getElementById("timerSubject");
-  const subjectLabel = document.getElementById("focusSubject");
-  const timeDisplay = document.getElementById("focusTime");
+  setupFocusModeTimer();
+}
 
-  let interval = null;
+function setupFocusModeTimer() {
+  let timer = null;
   let seconds = 0;
-  let activeSubjectId = null;
 
-  openBtn.onclick = () => {
-    if (!subjectSelect || !subjectSelect.value) {
-      alert("Select a subject first");
-      return;
-    }
+  const display = document.getElementById("focusTimerDisplay");
 
-    activeSubjectId = subjectSelect.value;
-    subjectLabel.textContent =
-      subjectSelect.options[subjectSelect.selectedIndex].text;
-
-    overlay.style.display = "flex";
-    document.body.style.overflow = "hidden";
+  document.getElementById("focusStart").onclick = () => {
+    if (timer) return;
+    timer = setInterval(() => {
+      seconds++;
+      display.textContent = format(seconds);
+    }, 1000);
   };
 
-  closeBtn && (closeBtn.onclick = exit);
-  startBtn && (startBtn.onclick = start);
-  pauseBtn && (pauseBtn.onclick = pause);
-  stopBtn && (stopBtn.onclick = stop);
+  document.getElementById("focusPause").onclick = () => {
+    clearInterval(timer);
+    timer = null;
+  };
 
-  function start() {
-    if (interval) return;
-    interval = setInterval(() => {
-      seconds++;
-      timeDisplay.textContent = format(seconds);
-    }, 1000);
-  }
+  document.getElementById("focusStop").onclick = () => {
+    clearInterval(timer);
+    timer = null;
 
-  function pause() {
-    clearInterval(interval);
-    interval = null;
-  }
+    const minutes = Math.floor(seconds / 60);
+    const goal = appState.goals.find(g => g.id === appState.activeGoalId);
 
-  function stop() {
-    pause();
+    if (goal && minutes > 0) {
+      goal.progress += minutes;
+      if (goal.progress >= goal.target) {
+        goal.progress = goal.target;
+        goal.completed = true;
+      }
+    }
+
+    persistState();
     seconds = 0;
-    timeDisplay.textContent = "00:00";
-    exit();
-  }
+    display.textContent = "00:00";
+    renderGoals();
+  };
 
-  function exit() {
-    pause();
-    overlay.style.display = "none";
-    document.body.style.overflow = "auto";
-  }
+  document.getElementById("focusExit").onclick = () => {
+    document.getElementById("focusOverlay").remove();
+    appState.activeGoalId = null;
+    persistState();
+  };
 }
 
 function format(sec) {
@@ -81,4 +83,3 @@ function format(sec) {
   const s = String(sec % 60).padStart(2, "0");
   return `${m}:${s}`;
 }
-
