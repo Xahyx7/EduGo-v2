@@ -5,19 +5,15 @@ import { renderTodayRing } from "./todayRing.js";
 
 let timer = null;
 let seconds = 0;
-let activeSubjectId = null;
+let subjectId = null;
 
 export function setupFocusTimer() {
-  const start = document.getElementById("startTimer");
-  const pause = document.getElementById("pauseTimer");
-  const stop = document.getElementById("stopTimer");
   const display = document.getElementById("timerDisplay");
   const select = document.getElementById("timerSubject");
 
-  start.onclick = () => {
+  document.getElementById("startTimer").onclick = () => {
     if (!select.value) return alert("Select subject");
-
-    activeSubjectId = select.value;
+    subjectId = select.value;
     if (timer) return;
 
     timer = setInterval(() => {
@@ -26,23 +22,22 @@ export function setupFocusTimer() {
     }, 1000);
   };
 
-  pause.onclick = () => {
+  document.getElementById("pauseTimer").onclick = () => {
     clearInterval(timer);
     timer = null;
   };
 
-  stop.onclick = () => {
+  document.getElementById("stopTimer").onclick = () => {
     clearInterval(timer);
     timer = null;
 
-    if (activeSubjectId && seconds > 0) {
+    if (seconds > 0) {
       appState.sessions.push({
-        subjectId: activeSubjectId,
+        subjectId,
         minutes: Math.floor(seconds / 60),
         time: Date.now()
       });
-
-      persistState(); // ✅ SAVE
+      persistState();
     }
 
     seconds = 0;
@@ -52,7 +47,5 @@ export function setupFocusTimer() {
 }
 
 function format(sec) {
-  const m = String(Math.floor(sec / 60)).padStart(2, "0");
-  const s = String(sec % 60).padStart(2, "0");
-  return `${m}:${s}`;
+  return `${String(Math.floor(sec/60)).padStart(2,"0")}:${String(sec%60).padStart(2,"0")}`;
 }
