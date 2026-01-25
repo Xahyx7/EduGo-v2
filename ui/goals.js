@@ -1,4 +1,4 @@
-// ui/// ui/goals.js
+// ui/goals.js
 
 import { appState, persistState } from "../state/state.js";
 import { renderGoals } from "./renderGoals.js";
@@ -7,40 +7,29 @@ export function setupGoals() {
   const btn = document.getElementById("addGoalBtn");
   const modal = document.getElementById("goalModal");
 
-  const subjectSelect = document.getElementById("goalSubject");
-  const topicInput = document.getElementById("goalTopic");
-  const typeSelect = document.getElementById("goalType");
-  const targetInput = document.getElementById("goalTarget");
-
   btn.onclick = () => {
-    subjectSelect.innerHTML = "";
+    const sel = document.getElementById("goalSubject");
+    sel.innerHTML = "";
     appState.subjects.forEach(s => {
-      const opt = document.createElement("option");
-      opt.value = s.id;
-      opt.textContent = s.name;
-      subjectSelect.appendChild(opt);
+      const o = document.createElement("option");
+      o.value = s.id;
+      o.textContent = s.name;
+      sel.appendChild(o);
     });
-
     modal.style.display = "block";
   };
 
-  document.getElementById("cancelGoal").onclick = () => {
-    modal.style.display = "none";
-  };
+  document.getElementById("cancelGoal").onclick = () => modal.style.display = "none";
 
   document.getElementById("saveGoal").onclick = () => {
-    const subjectId = subjectSelect.value;
-    const subjectName =
-      appState.subjects.find(s => s.id === subjectId)?.name;
+    const subjectId = document.getElementById("goalSubject").value;
+    const topic = document.getElementById("goalTopic").value;
+    const type = document.getElementById("goalType").value;
+    const target = Number(document.getElementById("goalTarget").value);
 
-    const topic = topicInput.value.trim();
-    const type = typeSelect.value;
-    const target = Number(targetInput.value);
+    if (!topic || target <= 0) return;
 
-    if (!subjectId || !topic || target <= 0) {
-      alert("Fill all fields");
-      return;
-    }
+    const subjectName = appState.subjects.find(s => s.id === subjectId)?.name;
 
     appState.goals.push({
       id: Date.now().toString(),
@@ -55,72 +44,6 @@ export function setupGoals() {
 
     persistState();
     modal.style.display = "none";
-    topicInput.value = "";
-    targetInput.value = "";
-
-    renderGoals();
-  };
-}
-
-
-import { appState, persistState } from "../state/state.js";
-import { renderGoals } from "./renderGoals.js";
-
-export function setupGoals() {
-  const btn = document.getElementById("addGoalBtn");
-  const modal = document.getElementById("goalModal");
-
-  const subjectSelect = document.getElementById("goalSubject");
-  const topicInput = document.getElementById("goalTopic");
-  const typeSelect = document.getElementById("goalType");
-  const targetInput = document.getElementById("goalTarget");
-
-  btn.onclick = () => {
-    subjectSelect.innerHTML = "";
-    appState.subjects.forEach(s => {
-      const opt = document.createElement("option");
-      opt.value = s.id;
-      opt.textContent = s.name;
-      subjectSelect.appendChild(opt);
-    });
-
-    modal.style.display = "block";
-  };
-
-  document.getElementById("cancelGoal").onclick = () => {
-    modal.style.display = "none";
-  };
-
-  document.getElementById("saveGoal").onclick = () => {
-    const subjectId = subjectSelect.value;
-    const subjectName =
-      appState.subjects.find(s => s.id === subjectId)?.name;
-
-    const topic = topicInput.value.trim();
-    const type = typeSelect.value;
-    const target = Number(targetInput.value);
-
-    if (!subjectId || !topic || target <= 0) {
-      alert("Fill all fields");
-      return;
-    }
-
-    appState.goals.push({
-      id: Date.now().toString(),
-      subjectId,
-      subjectName,
-      topic,
-      type,
-      target,
-      progress: 0,
-      completed: false
-    });
-
-    persistState();
-    modal.style.display = "none";
-    topicInput.value = "";
-    targetInput.value = "";
-
     renderGoals();
   };
 }
