@@ -8,7 +8,6 @@ const defaultState = {
   sessions: []
 };
 
-// ✅ SINGLE declaration (this is important)
 export const appState = loadState() || defaultState;
 
 export function persistState() {
