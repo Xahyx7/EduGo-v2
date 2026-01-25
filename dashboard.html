@@ -12,7 +12,6 @@
 
   <div class="app-shell">
 
-    <!-- HEADER -->
     <header class="app-header">
       <div>
         <h1>EduGo</h1>
@@ -23,7 +22,7 @@
     <!-- ADD SUBJECT -->
     <button id="addSubjectBtn">+ Add Subject</button>
 
-    <!-- ADD SUBJECT MODAL -->
+    <!-- SUBJECT MODAL -->
     <div id="subjectModal" class="modal-overlay" style="display:none">
       <div class="modal">
         <h3>Add Subject</h3>
@@ -34,37 +33,45 @@
       </div>
     </div>
 
-    <!-- TODAY -->
+    <!-- TOP GRID -->
     <section class="top-grid">
+
+      <!-- TODAY RING -->
       <div class="card card-large">
         <h3>Today</h3>
-       <div class="today-ring">
-  <svg width="140" height="140">
-    <circle
-      cx="70"
-      cy="70"
-      r="52"
-      stroke="rgba(255,255,255,0.15)"
-      stroke-width="10"
-      fill="none"
-    />
-    <circle
-      id="todayRingProgress"
-      cx="70"
-      cy="70"
-      r="52"
-      stroke="#4fc3f7"
-      stroke-width="10"
-      fill="none"
-      stroke-linecap="round"
-      transform="rotate(-90 70 70)"
-    />
-  </svg>
-
-  <div id="todayRingLabel" class="ring-label">0 min</div>
-</div>
-
+        <div class="today-ring">
+          <svg width="140" height="140">
+            <circle cx="70" cy="70" r="52"
+              stroke="rgba(255,255,255,0.15)"
+              stroke-width="10" fill="none"/>
+            <circle id="todayRingProgress"
+              cx="70" cy="70" r="52"
+              stroke="#4fc3f7"
+              stroke-width="10"
+              fill="none"
+              stroke-linecap="round"
+              transform="rotate(-90 70 70)"/>
+          </svg>
+          <div id="todayRingLabel" class="ring-label">0 min</div>
+        </div>
       </div>
+
+      <!-- 📊 DAILY ANALYTICS CARD -->
+      <div class="card">
+        <div class="card-header">
+          <h3>Daily Analytics</h3>
+          <button id="openAnalytics" class="icon-btn">⛶</button>
+        </div>
+
+        <select id="dailyAnalyticsMode">
+          <option value="overall">Overall</option>
+          <option value="subject">Subject</option>
+          <option value="goal">Goal</option>
+        </select>
+
+        <div id="dailyAnalyticsContent"></div>
+      </div>
+
     </section>
 
     <!-- SUBJECTS -->
@@ -82,28 +89,23 @@
   </div>
 
   <!-- ADD GOAL -->
-<button id="addGoalBtn">+ Add Goal</button>
+  <button id="addGoalBtn">+ Add Goal</button>
 
-<div id="goalModal" class="modal-overlay" style="display:none">
-  <div class="modal">
-    <h3>Add Goal</h3>
-
-    <select id="goalSubject"></select>
-    <input id="goalTopic" placeholder="Topic (e.g. Trigonometry)" />
-    
-    <select id="goalType">
-      <option value="time">Time (minutes)</option>
-      <option value="units">Units</option>
-    </select>
-
-    <input id="goalTarget" type="number" placeholder="Target" />
-
-    <button id="saveGoal">Save Goal</button>
-    <button id="cancelGoal">Cancel</button>
+  <div id="goalModal" class="modal-overlay" style="display:none">
+    <div class="modal">
+      <h3>Add Goal</h3>
+      <select id="goalSubject"></select>
+      <input id="goalTopic" placeholder="Topic" />
+      <select id="goalType">
+        <option value="time">Time (minutes)</option>
+        <option value="units">Units</option>
+      </select>
+      <input id="goalTarget" type="number" placeholder="Target" />
+      <button id="saveGoal">Save Goal</button>
+      <button id="cancelGoal">Cancel</button>
+    </div>
   </div>
-</div>
 
-  
   <!-- FLOATING TIMER -->
   <div class="floating-timer">
     <select id="timerSubject"></select>
