@@ -5,7 +5,8 @@ import { loadState, saveState } from "./persistence.js";
 const defaultState = {
   subjects: [],
   goals: [],
-  sessions: []
+  sessions: [],
+  activeGoalId: null   // 🔥 NEW
 };
 
 export const appState = loadState() || defaultState;
