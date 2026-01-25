@@ -1,7 +1,8 @@
 // ui/todayRing.js
 
 import { appState } from "../state/state.js";
-import { getTodayMinutes } from "../state/selectors.js";
+
+const DAILY_GOAL_MINUTES = 120; // you can change later
 
 export function renderTodayRing() {
   const circle = document.getElementById("todayRingProgress");
@@ -12,14 +13,17 @@ export function renderTodayRing() {
   const radius = 52;
   const circumference = 2 * Math.PI * radius;
 
-  const today = getTodayMinutes();
-  const goal = appState.goals.dailyMinutes || 60;
+  const today = new Date().toDateString();
 
-  const percent = Math.min(today / goal, 1);
+  const minutes = appState.sessions
+    .filter(s => new Date(s.time).toDateString() === today)
+    .reduce((sum, s) => sum + s.minutes, 0);
+
+  const percent = Math.min(minutes / DAILY_GOAL_MINUTES, 1);
   const offset = circumference * (1 - percent);
 
   circle.style.strokeDasharray = circumference;
   circle.style.strokeDashoffset = offset;
 
-  label.textContent = `${Math.round(percent * 100)}%`;
+  label.textContent = `${minutes} min`;
 }
