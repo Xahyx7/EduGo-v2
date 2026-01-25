@@ -1,6 +1,6 @@
 // ui/renderGoals.js
 
-import { appState } from "../state/state.js";
+import { appState, persistState } from "../state/state.js";
 
 export function renderGoals() {
   const box = document.getElementById("goalsPreview");
@@ -18,21 +18,40 @@ export function renderGoals() {
     card.className = "goal-card";
 
     card.innerHTML = `
-      <strong>${goal.subjectName}</strong>
-      <div>${goal.topic}</div>
+      <div class="goal-header">
+        <strong>${goal.subjectName}</strong>
+        <button class="goal-check">
+          ${goal.completed ? "✔" : "○"}
+        </button>
+      </div>
+
+      <div class="goal-topic">${goal.topic}</div>
 
       <div class="goal-bar">
         <div class="goal-fill" style="width:${percent}%"></div>
       </div>
 
-      <div>
+      <div class="goal-text">
         ${goal.progress}/${goal.target} ${goal.type}
-        ${goal.completed ? " ✅" : ""}
+        ${goal.completed ? " (Completed)" : ""}
       </div>
     `;
 
+    // ✔ Manual completion
+    card.querySelector(".goal-check").onclick = () => {
+      goal.completed = !goal.completed;
+
+      // if manually completed early, snap progress to target
+      if (goal.completed) {
+        goal.progress = goal.target;
+      }
+
+      persistState();
+      renderGoals();
+    };
+
     if (goal.completed) {
-      card.style.opacity = "0.6";
+      card.classList.add("goal-completed");
     }
 
     box.appendChild(card);
