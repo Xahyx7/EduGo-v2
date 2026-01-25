@@ -557,3 +557,20 @@ button.primary:hover {
   font-size: 36px;
   margin-top: 8px;
 }
+/* STREAK CARD */
+
+.streak-card {
+  text-align: center;
+}
+
+.streak-main {
+  font-size: 26px;
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+.streak-sub {
+  margin-top: 4px;
+  font-size: 13px;
+  opacity: 0.7;
+}
