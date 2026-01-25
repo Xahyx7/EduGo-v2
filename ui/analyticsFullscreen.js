@@ -81,7 +81,8 @@ function renderDaily() {
         Object.keys(subjectTime).length === 0
           ? "<p class='muted'>No study yet</p>"
           : Object.entries(subjectTime).map(([id, min]) => {
-              const name = appState.subjects.find(s => s.id === id)?.name || "Unknown";
+              const name =
+                appState.subjects.find(s => s.id === id)?.name || "Unknown";
               return barRow(name, min, maxTime);
             }).join("")
       }
@@ -113,32 +114,28 @@ function renderGoalAnalytics() {
   return `
     <div class="analytics-card">
       <h3>Goals (Today)</h3>
-
       ${
         Object.keys(subjects).length === 0
           ? "<p class='muted'>No goals yet</p>"
-          : Object.entries(subjects).map(([subject, data]) => {
-              const total = data.completed + data.pending;
-              return `
-                <div class="goal-analytics-row">
-                  <strong>${subject}</strong>
-                  <div class="goal-bars">
-                    <div class="goal-bar completed" style="width:${(data.completed / maxGoals) * 100}%">
-                      ✔ ${data.completed}
-                    </div>
-                    <div class="goal-bar pending" style="width:${(data.pending / maxGoals) * 100}%">
-                      ○ ${data.pending}
-                    </div>
+          : Object.entries(subjects).map(([subject, data]) => `
+              <div class="goal-analytics-row">
+                <strong>${subject}</strong>
+                <div class="goal-bars">
+                  <div class="goal-bar completed" style="width:${(data.completed / maxGoals) * 100}%">
+                    ✔ ${data.completed}
+                  </div>
+                  <div class="goal-bar pending" style="width:${(data.pending / maxGoals) * 100}%">
+                    ○ ${data.pending}
                   </div>
                 </div>
-              `;
-            }).join("")
+              </div>
+            `).join("")
       }
     </div>
   `;
 }
 
-/* ================= WEEKLY (UNCHANGED) ================= */
+/* ================= WEEKLY ================= */
 
 function renderWeekly() {
   const box = document.getElementById("analyticsContent");
@@ -173,42 +170,35 @@ function renderWeekly() {
   `;
 }
 
-
-/* ================= YEARLY (UNCHANGED) ================= */
+/* ================= YEARLY (FIXED) ================= */
 
 function renderYearly() {
   const box = document.getElementById("analyticsContent");
 
-  const weekDays = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
-  const weekMap = Object.fromEntries(weekDays.map(d => [d, 0]));
+  const months = [
+    "Jan","Feb","Mar","Apr","May","Jun",
+    "Jul","Aug","Sep","Oct","Nov","Dec"
+  ];
 
-  const now = new Date();
-  const monday = new Date(now);
-  monday.setDate(now.getDate() - ((now.getDay() + 6) % 7));
-  monday.setHours(0,0,0,0);
-
-  const sunday = new Date(monday);
-  sunday.setDate(monday.getDate() + 6);
-  sunday.setHours(23,59,59,999);
+  const year = new Date().getFullYear();
+  const monthMap = Object.fromEntries(months.map(m => [m, 0]));
 
   appState.sessions.forEach(s => {
-    const t = new Date(s.time);
-    if (t >= monday && t <= sunday) {
-      const d = t.toLocaleDateString("en-US",{weekday:"short"});
-      weekMap[d] += s.minutes;
+    const d = new Date(s.time);
+    if (d.getFullYear() === year) {
+      monthMap[months[d.getMonth()]] += s.minutes;
     }
   });
 
-  const max = Math.max(...Object.values(weekMap), 1);
+  const max = Math.max(...Object.values(monthMap), 1);
 
   box.innerHTML = `
     <div class="analytics-card big">
-      <h3>This Week</h3>
-      ${weekDays.map(d => barRow(d, weekMap[d], max)).join("")}
+      <h3>${year} Overview</h3>
+      ${months.map(m => barRow(m, monthMap[m], max)).join("")}
     </div>
   `;
 }
-
 
 /* ================= HELPERS ================= */
 
