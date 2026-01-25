@@ -3,6 +3,7 @@
 import { appState, persistState } from "../state/state.js";
 import { renderGoals } from "./renderGoals.js";
 import { renderTodayRing } from "./todayRing.js";
+import { renderStreaks } from "./streaks.js";
 
 export function enterFocusMode(goalId) {
   appState.activeGoalId = goalId;
@@ -43,7 +44,6 @@ function setupFocusModeTimer() {
 
   document.getElementById("focusStart").onclick = () => {
     if (timer) return;
-
     timer = setInterval(() => {
       seconds++;
       display.textContent = format(seconds);
@@ -63,14 +63,14 @@ function setupFocusModeTimer() {
     const goal = appState.goals.find(g => g.id === appState.activeGoalId);
 
     if (goal && minutes > 0) {
-      // 🔥 UPDATE GOAL
+      // Update goal
       goal.progress += minutes;
       if (goal.progress >= goal.target) {
         goal.progress = goal.target;
         goal.completed = true;
       }
 
-      // 🔥 UPDATE TODAY RING (SESSION)
+      // Save session
       appState.sessions.push({
         subjectId: goal.subjectId,
         minutes,
@@ -78,8 +78,11 @@ function setupFocusModeTimer() {
       });
 
       persistState();
+
+      // 🔥 LIVE UPDATES
       renderGoals();
       renderTodayRing();
+      renderStreaks();
     }
 
     seconds = 0;
