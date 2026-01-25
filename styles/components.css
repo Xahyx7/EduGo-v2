@@ -69,18 +69,17 @@ button:active {
 
 /* Glass card upgrade */
 .card {
-  background: linear-gradient(
-      180deg,
-      rgba(255,255,255,0.10),
-      rgba(255,255,255,0.03)
-    );
-  backdrop-filter: blur(18px) saturate(120%);
-  border: 1px solid rgba(255,255,255,0.12);
-  transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease,
-    border-color 0.25s ease;
+  background: var(--bg-card);
+  backdrop-filter: var(--blur);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+  transition: transform .35s ease, box-shadow .35s ease;
 }
+
 
 /* Hover lift */
 .card:hover {
