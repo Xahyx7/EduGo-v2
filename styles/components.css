@@ -574,3 +574,47 @@ button.primary:hover {
   font-size: 13px;
   opacity: 0.7;
 }
+/* ===== ANALYTICS POLISH ===== */
+
+.muted { opacity: .6; }
+
+.bar-row {
+  display: grid;
+  grid-template-columns: 72px 1fr 48px;
+  align-items: center;
+  gap: 10px;
+  margin: 8px 0;
+}
+
+.bar-label { font-size: 13px; opacity: .85; }
+.bar-value { font-size: 12px; opacity: .8; text-align: right; }
+
+.bar {
+  height: 8px;
+  background: rgba(255,255,255,.14);
+  border-radius: 999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.bar-fill {
+  height: 100%;
+  width: var(--w, 0%);
+  background: linear-gradient(90deg, #22d3ee, #4fc3f7);
+  box-shadow: 0 0 14px rgba(79,195,247,.6);
+  border-radius: 999px;
+  transition: width .6s cubic-bezier(.2,.8,.2,1);
+}
+
+.bar:hover .bar-fill {
+  filter: brightness(1.1);
+}
+
+.analytics-card {
+  backdrop-filter: blur(8px);
+}
+
+.analytics-big-number {
+  font-size: 40px;
+  letter-spacing: .5px;
+}
