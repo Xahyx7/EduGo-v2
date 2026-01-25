@@ -17,12 +17,12 @@ export function openAnalyticsFullscreen() {
         </header>
 
         <nav class="analytics-tabs">
-          <button class="active">Daily</button>
-          <button disabled>Weekly</button>
-          <button disabled>Yearly</button>
+          <button id="tabDaily" class="active">Daily</button>
+          <button id="tabWeekly">Weekly</button>
+          <button id="tabYearly" disabled>Yearly</button>
         </nav>
 
-        <section id="analyticsDaily" class="analytics-content"></section>
+        <section id="analyticsContent" class="analytics-content"></section>
 
       </div>
     </div>
@@ -31,17 +31,30 @@ export function openAnalyticsFullscreen() {
 
   document.getElementById("closeAnalytics").onclick = closeAnalyticsFullscreen;
 
-  renderDailyAnalyticsFullscreen();
+  document.getElementById("tabDaily").onclick = () => switchTab("daily");
+  document.getElementById("tabWeekly").onclick = () => switchTab("weekly");
+
+  renderDaily();
 }
 
 function closeAnalyticsFullscreen() {
   document.getElementById("analyticsOverlay")?.remove();
 }
 
-function renderDailyAnalyticsFullscreen() {
-  const box = document.getElementById("analyticsDaily");
-  if (!box) return;
+function switchTab(tab) {
+  document.querySelectorAll(".analytics-tabs button")
+    .forEach(b => b.classList.remove("active"));
 
+  document.getElementById(`tab${capitalize(tab)}`).classList.add("active");
+
+  if (tab === "daily") renderDaily();
+  if (tab === "weekly") renderWeekly();
+}
+
+/* ================= DAILY ================= */
+
+function renderDaily() {
+  const box = document.getElementById("analyticsContent");
   const today = new Date().toDateString();
 
   const sessions = appState.sessions.filter(
@@ -50,15 +63,10 @@ function renderDailyAnalyticsFullscreen() {
 
   const total = sessions.reduce((a, b) => a + b.minutes, 0);
 
-  // Subject breakdown
   const subjectMap = {};
   sessions.forEach(s => {
     subjectMap[s.subjectId] = (subjectMap[s.subjectId] || 0) + s.minutes;
   });
-
-  // Goals
-  const completedGoals = appState.goals.filter(g => g.completed);
-  const pendingGoals = appState.goals.filter(g => !g.completed);
 
   box.innerHTML = `
     <div class="analytics-card big">
@@ -74,29 +82,62 @@ function renderDailyAnalyticsFullscreen() {
           : Object.entries(subjectMap).map(([id, min]) => {
               const name =
                 appState.subjects.find(s => s.id === id)?.name || "Unknown";
-              return `
-                <div class="bar-row">
-                  <span>${name}</span>
-                  <div class="bar">
-                    <div class="bar-fill" style="width:${min * 3}px"></div>
-                  </div>
-                  <span>${min}m</span>
-                </div>
-              `;
+              return barRow(name, min);
             }).join("")
       }
     </div>
+  `;
+}
 
-    <div class="analytics-card">
-      <h3>Goals Today</h3>
+/* ================= WEEKLY ================= */
 
-      <strong>Completed</strong>
-      ${completedGoals.map(g => `<div>✔ ${g.topic}</div>`).join("") || "<p>None</p>"}
+function renderWeekly() {
+  const box = document.getElementById("analyticsContent");
 
-      <br />
+  const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  const weekMap = {};
 
-      <strong>Pending</strong>
-      ${pendingGoals.map(g => `<div>○ ${g.topic}</div>`).join("") || "<p>None</p>"}
+  weekDays.forEach(d => weekMap[d] = 0);
+
+  const now = new Date();
+  const monday = new Date(now);
+  monday.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+  monday.setHours(0, 0, 0, 0);
+
+  const sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
+  sunday.setHours(23, 59, 59, 999);
+
+  appState.sessions.forEach(s => {
+    const t = new Date(s.time);
+    if (t >= monday && t <= sunday) {
+      const day = t.toLocaleDateString("en-US", { weekday: "short" });
+      weekMap[day] += s.minutes;
+    }
+  });
+
+  box.innerHTML = `
+    <div class="analytics-card big">
+      <h3>This Week</h3>
+      ${weekDays.map(d => barRow(d, weekMap[d])).join("")}
     </div>
   `;
+}
+
+/* ================= HELPERS ================= */
+
+function barRow(label, minutes) {
+  return `
+    <div class="bar-row">
+      <span>${label}</span>
+      <div class="bar">
+        <div class="bar-fill" style="width:${minutes * 3}px"></div>
+      </div>
+      <span>${minutes}m</span>
+    </div>
+  `;
+}
+
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }
