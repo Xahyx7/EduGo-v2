@@ -176,7 +176,7 @@ function renderWeekly() {
 
 /* ================= YEARLY (UNCHANGED) ================= */
 
-function renderWeekly() {
+function renderYearly() {
   const box = document.getElementById("analyticsContent");
 
   const weekDays = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
