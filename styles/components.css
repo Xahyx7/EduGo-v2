@@ -484,3 +484,76 @@ button.primary:hover {
   height: 100%;
   background: linear-gradient(90deg, #22d3ee, #4fc3f7);
 }
+/* ANALYTICS FULLSCREEN */
+
+.analytics-overlay {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at top, #020617, #000);
+  z-index: 9998;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.analytics-shell {
+  width: 92%;
+  height: 92%;
+  background: rgba(255,255,255,0.05);
+  border-radius: 24px;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.analytics-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.analytics-header button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.analytics-tabs {
+  display: flex;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.analytics-tabs button {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+}
+
+.analytics-tabs button.active {
+  background: #4fc3f7;
+  color: #000;
+}
+
+.analytics-content {
+  display: grid;
+  gap: 16px;
+}
+
+.analytics-card {
+  padding: 16px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.08);
+}
+
+.analytics-card.big {
+  text-align: center;
+}
+
+.analytics-big-number {
+  font-size: 36px;
+  margin-top: 8px;
+}
