@@ -1,58 +1,60 @@
 // ui/renderGoals.js
 
-import { appState, persistState } from "../state/state.js";
+import { appState } from "../state/state.js";
 import { enterFocusMode } from "./focusMode.js";
 
 export function renderGoals() {
-  const box = document.getElementById("goalsPreview");
-  box.innerHTML = "";
+  const container = document.getElementById("goalsPreview");
+  if (!container) return;
 
-  if (appState.goals.length === 0) {
-    box.innerHTML = "<p>No goals yet</p>";
+  const today = new Date().toISOString().slice(0, 10);
+
+  const todaysGoals = appState.goals.filter(
+    g => g.createdOn === today
+  );
+
+  container.innerHTML = "";
+
+  if (todaysGoals.length === 0) {
+    container.innerHTML = `<p class="muted">No goals for today</p>`;
     return;
   }
 
-  appState.goals.forEach(goal => {
-    const percent = Math.min(goal.progress / goal.target, 1) * 100;
+  todaysGoals.forEach(goal => {
+    const pct = Math.round((goal.progress / goal.target) * 100);
 
     const card = document.createElement("div");
     card.className = "goal-card";
 
     card.innerHTML = `
-      <div class="goal-header">
-        <strong>${goal.subjectName}</strong>
-        <div>
-          <button class="goal-focus">🎯</button>
-          <button class="goal-check">${goal.completed ? "✔" : "○"}</button>
-        </div>
-      </div>
-
-      <div class="goal-topic">${goal.topic}</div>
+      <h4>${goal.topic}</h4>
+      <p>${goal.subjectName}</p>
 
       <div class="goal-bar">
-        <div class="goal-fill" style="width:${percent}%"></div>
+        <div class="goal-fill" style="width:${pct}%"></div>
       </div>
 
-      <div class="goal-text">
-        ${goal.progress}/${goal.target} ${goal.type}
+      <div class="goal-actions">
+        <button class="focus-btn">Focus</button>
+        ${
+          goal.completed
+            ? "<span class='done'>✔</span>"
+            : "<button class='done-btn'>✔</button>"
+        }
       </div>
     `;
 
-    // Manual completion
-    card.querySelector(".goal-check").onclick = () => {
-      goal.completed = !goal.completed;
-      if (goal.completed) goal.progress = goal.target;
-      persistState();
-      renderGoals();
-    };
-
-    // 🔥 ENTER FOCUS MODE
-    card.querySelector(".goal-focus").onclick = () => {
+    card.querySelector(".focus-btn").onclick = () =>
       enterFocusMode(goal.id);
-    };
 
-    if (goal.completed) card.classList.add("goal-completed");
+    if (!goal.completed) {
+      card.querySelector(".done-btn").onclick = () => {
+        goal.completed = true;
+        goal.progress = goal.target;
+        renderGoals();
+      };
+    }
 
-    box.appendChild(card);
+    container.appendChild(card);
   });
 }
