@@ -10,16 +10,20 @@ export function setupGoals() {
   btn.onclick = () => {
     const sel = document.getElementById("goalSubject");
     sel.innerHTML = "";
+
     appState.subjects.forEach(s => {
       const o = document.createElement("option");
       o.value = s.id;
       o.textContent = s.name;
       sel.appendChild(o);
     });
+
     modal.style.display = "block";
   };
 
-  document.getElementById("cancelGoal").onclick = () => modal.style.display = "none";
+  document.getElementById("cancelGoal").onclick = () => {
+    modal.style.display = "none";
+  };
 
   document.getElementById("saveGoal").onclick = () => {
     const subjectId = document.getElementById("goalSubject").value;
@@ -29,7 +33,11 @@ export function setupGoals() {
 
     if (!topic || target <= 0) return;
 
-    const subjectName = appState.subjects.find(s => s.id === subjectId)?.name;
+    const subjectName =
+      appState.subjects.find(s => s.id === subjectId)?.name;
+
+    // 🔑 ADD TODAY TAG (SAFE)
+    const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
 
     appState.goals.push({
       id: Date.now().toString(),
@@ -39,7 +47,8 @@ export function setupGoals() {
       type,
       target,
       progress: 0,
-      completed: false
+      completed: false,
+      createdOn: today
     });
 
     persistState();
