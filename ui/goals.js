@@ -1,49 +1,65 @@
-// ui/goals.js
+// ui/addGoal.js
 
 import { appState, persistState } from "../state/state.js";
 import { renderGoals } from "./renderGoals.js";
 
-export function setupGoals() {
-  const btn = document.getElementById("addGoalBtn");
+export function setupAddGoal() {
+  const addBtn = document.getElementById("addGoalBtn");
   const modal = document.getElementById("goalModal");
+  const saveBtn = document.getElementById("saveGoal");
+  const cancelBtn = document.getElementById("cancelGoal");
 
-  btn.onclick = () => {
-    const sel = document.getElementById("goalSubject");
-    sel.innerHTML = "";
-    appState.subjects.forEach(s => {
-      const o = document.createElement("option");
-      o.value = s.id;
-      o.textContent = s.name;
-      sel.appendChild(o);
-    });
-    modal.style.display = "block";
+  if (!addBtn) return;
+
+  addBtn.onclick = () => {
+    populateSubjectSelect();
+    modal.style.display = "flex";
   };
 
-  document.getElementById("cancelGoal").onclick = () => modal.style.display = "none";
+  cancelBtn.onclick = () => {
+    modal.style.display = "none";
+  };
 
-  document.getElementById("saveGoal").onclick = () => {
+  saveBtn.onclick = () => {
     const subjectId = document.getElementById("goalSubject").value;
     const topic = document.getElementById("goalTopic").value;
     const type = document.getElementById("goalType").value;
     const target = Number(document.getElementById("goalTarget").value);
 
-    if (!topic || target <= 0) return;
+    if (!subjectId || !topic || !target) {
+      alert("Fill all fields");
+      return;
+    }
 
-    const subjectName = appState.subjects.find(s => s.id === subjectId)?.name;
+    const subject = appState.subjects.find(s => s.id === subjectId);
+    const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
 
     appState.goals.push({
-      id: Date.now().toString(),
+      id: crypto.randomUUID(),
       subjectId,
-      subjectName,
+      subjectName: subject.name,
       topic,
       type,
       target,
       progress: 0,
-      completed: false
+      completed: false,
+      createdOn: today
     });
 
     persistState();
-    modal.style.display = "none";
     renderGoals();
+    modal.style.display = "none";
   };
+}
+
+function populateSubjectSelect() {
+  const select = document.getElementById("goalSubject");
+  select.innerHTML = "";
+
+  appState.subjects.forEach(s => {
+    const opt = document.createElement("option");
+    opt.value = s.id;
+    opt.textContent = s.name;
+    select.appendChild(opt);
+  });
 }
