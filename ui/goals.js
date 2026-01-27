@@ -7,6 +7,9 @@ export function setupGoals() {
   const btn = document.getElementById("addGoalBtn");
   const modal = document.getElementById("goalModal");
 
+  if (!btn || !modal) return;
+
+  // OPEN MODAL
   btn.onclick = () => {
     const sel = document.getElementById("goalSubject");
     sel.innerHTML = "";
@@ -21,23 +24,22 @@ export function setupGoals() {
     modal.style.display = "block";
   };
 
+  // CANCEL
   document.getElementById("cancelGoal").onclick = () => {
     modal.style.display = "none";
   };
 
+  // SAVE GOAL
   document.getElementById("saveGoal").onclick = () => {
     const subjectId = document.getElementById("goalSubject").value;
-    const topic = document.getElementById("goalTopic").value;
+    const topic = document.getElementById("goalTopic").value.trim();
     const type = document.getElementById("goalType").value;
     const target = Number(document.getElementById("goalTarget").value);
 
-    if (!topic || target <= 0) return;
+    if (!subjectId || !topic || target <= 0) return;
 
     const subjectName =
-      appState.subjects.find(s => s.id === subjectId)?.name;
-
-    // 🔑 ADD TODAY TAG (SAFE)
-    const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+      appState.subjects.find(s => s.id === subjectId)?.name || "Unknown";
 
     appState.goals.push({
       id: Date.now().toString(),
@@ -48,7 +50,10 @@ export function setupGoals() {
       target,
       progress: 0,
       completed: false,
-      createdOn: today
+
+      // 🔑 THIS IS THE IMPORTANT PART
+      // Used to auto-refresh daily goals
+      date: new Date().toDateString()
     });
 
     persistState();
