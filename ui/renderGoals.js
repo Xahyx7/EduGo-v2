@@ -1,6 +1,7 @@
 // ui/renderGoals.js
 
 import { appState, persistState } from "../state/state.js";
+import { enterFocusMode } from "./focusMode.js";
 
 export function renderGoals() {
   const container = document.getElementById("goalsPreview");
@@ -8,16 +9,17 @@ export function renderGoals() {
 
   const today = new Date().toDateString();
 
+  // ONLY today's goals on dashboard
   const todaysGoals = appState.goals.filter(
     g => g.date === today
   );
+
+  container.innerHTML = "";
 
   if (todaysGoals.length === 0) {
     container.innerHTML = `<p class="muted">No goals for today</p>`;
     return;
   }
-
-  container.innerHTML = "";
 
   todaysGoals.forEach(goal => {
     const pct = Math.min(
@@ -42,6 +44,7 @@ export function renderGoals() {
       </div>
 
       <div class="goal-actions">
+        <button class="focus-btn">Focus</button>
         ${
           goal.completed
             ? `<span class="goal-done">✔ Completed</span>`
@@ -50,9 +53,16 @@ export function renderGoals() {
       </div>
     `;
 
+    // 🔥 RESTORED: FOCUS MODE
+    card.querySelector(".focus-btn").onclick = () => {
+      enterFocusMode(goal.id);
+    };
+
+    // Manual complete
     if (!goal.completed) {
       card.querySelector(".goal-complete").onclick = () => {
         goal.completed = true;
+        goal.progress = goal.target;
         persistState();
         renderGoals();
       };
