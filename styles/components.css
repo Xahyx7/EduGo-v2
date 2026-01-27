@@ -660,3 +660,15 @@ button.primary:hover {
   background-size: 200% 100%;
   animation: flow 3s linear infinite;
 }
+.goal-bar {
+  color: #fff;
+  font-weight: 600;
+}
+
+.goal-bar.completed {
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+}
+
+.goal-bar.pending {
+  background: linear-gradient(90deg, #64748b, #475569);
+}
