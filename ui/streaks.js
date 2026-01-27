@@ -40,17 +40,25 @@ export function renderStreaks() {
     longest = Math.max(longest, temp);
   }
 
-  /* ================= CURRENT STREAK (FIXED) ================= */
+  /* ================= CURRENT STREAK (FIXED PROPERLY) ================= */
 
   let current = 0;
+  const today = new Date();
+  const todayKey = today.toDateString();
 
-  // Start checking from YESTERDAY (not today)
-  const check = new Date();
-  check.setDate(check.getDate() - 1);
+  // ✅ If today already qualifies, count it
+  if (dayTotals[todayKey] >= MINUTES_REQUIRED) {
+    current = 1;
+    today.setDate(today.getDate() - 1);
+  } else {
+    // Otherwise start from yesterday
+    today.setDate(today.getDate() - 1);
+  }
 
-  while (dayTotals[check.toDateString()] >= MINUTES_REQUIRED) {
+  // Continue checking backwards
+  while (dayTotals[today.toDateString()] >= MINUTES_REQUIRED) {
     current++;
-    check.setDate(check.getDate() - 1);
+    today.setDate(today.getDate() - 1);
   }
 
   currentEl.textContent = current;
