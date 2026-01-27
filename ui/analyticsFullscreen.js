@@ -30,7 +30,7 @@ export function openAnalyticsFullscreen() {
   );
 
   document.getElementById("closeAnalytics").onclick = () =>
-    document.getElementById("analyticsOverlay")?.remove();
+    document.getElementById("analyticsOverlay").remove();
 
   document.getElementById("tabDaily").onclick = () => switchTab("daily");
   document.getElementById("tabWeekly").onclick = () => switchTab("weekly");
@@ -62,12 +62,12 @@ function renderDaily() {
 
   const total = sessions.reduce((a, b) => a + b.minutes, 0);
 
-  const subjectTime = {};
+  const subjectMap = {};
   sessions.forEach(s => {
-    subjectTime[s.subjectId] = (subjectTime[s.subjectId] || 0) + s.minutes;
+    subjectMap[s.subjectId] = (subjectMap[s.subjectId] || 0) + s.minutes;
   });
 
-  const maxTime = Math.max(...Object.values(subjectTime), 1);
+  const goals = appState.goals.filter(g => g.date === today);
 
   box.innerHTML = `
     <div class="analytics-card big">
@@ -78,56 +78,25 @@ function renderDaily() {
     <div class="analytics-card">
       <h3>Study by Subject</h3>
       ${
-        Object.keys(subjectTime).length === 0
+        Object.keys(subjectMap).length === 0
           ? "<p class='muted'>No study yet</p>"
-          : Object.entries(subjectTime).map(([id, min]) => {
+          : Object.entries(subjectMap).map(([id, min]) => {
               const name =
                 appState.subjects.find(s => s.id === id)?.name || "Unknown";
-              return barRow(name, min, maxTime);
+              return barRow(name, min, Math.max(...Object.values(subjectMap), 1));
             }).join("")
       }
     </div>
 
-    ${renderGoalAnalytics()}
-  `;
-}
-
-/* ================= GOAL ANALYTICS ================= */
-
-function renderGoalAnalytics() {
-  const subjects = {};
-
-  appState.goals.forEach(g => {
-    if (!subjects[g.subjectName]) {
-      subjects[g.subjectName] = { completed: 0, pending: 0 };
-    }
-    g.completed
-      ? subjects[g.subjectName].completed++
-      : subjects[g.subjectName].pending++;
-  });
-
-  const maxGoals = Math.max(
-    ...Object.values(subjects).map(v => v.completed + v.pending),
-    1
-  );
-
-  return `
     <div class="analytics-card">
       <h3>Goals (Today)</h3>
       ${
-        Object.keys(subjects).length === 0
-          ? "<p class='muted'>No goals yet</p>"
-          : Object.entries(subjects).map(([subject, data]) => `
+        goals.length === 0
+          ? "<p class='muted'>No goals</p>"
+          : goals.map(g => `
               <div class="goal-analytics-row">
-                <strong>${subject}</strong>
-                <div class="goal-bars">
-                  <div class="goal-bar completed" style="width:${(data.completed / maxGoals) * 100}%">
-                    ✔ ${data.completed}
-                  </div>
-                  <div class="goal-bar pending" style="width:${(data.pending / maxGoals) * 100}%">
-                    ○ ${data.pending}
-                  </div>
-                </div>
+                <span>${g.topic}</span>
+                <span>${g.completed ? "✔" : "○"}</span>
               </div>
             `).join("")
       }
@@ -140,8 +109,8 @@ function renderGoalAnalytics() {
 function renderWeekly() {
   const box = document.getElementById("analyticsContent");
 
-  const weekDays = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
-  const weekMap = Object.fromEntries(weekDays.map(d => [d, 0]));
+  const days = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+  const map = Object.fromEntries(days.map(d => [d, 0]));
 
   const now = new Date();
   const monday = new Date(now);
@@ -154,67 +123,3 @@ function renderWeekly() {
 
   appState.sessions.forEach(s => {
     const t = new Date(s.time);
-    if (t >= monday && t <= sunday) {
-      const d = t.toLocaleDateString("en-US",{weekday:"short"});
-      weekMap[d] += s.minutes;
-    }
-  });
-
-  const max = Math.max(...Object.values(weekMap), 1);
-
-  box.innerHTML = `
-    <div class="analytics-card big">
-      <h3>This Week</h3>
-      ${weekDays.map(d => barRow(d, weekMap[d], max)).join("")}
-    </div>
-  `;
-}
-
-/* ================= YEARLY (FIXED) ================= */
-
-function renderYearly() {
-  const box = document.getElementById("analyticsContent");
-
-  const months = [
-    "Jan","Feb","Mar","Apr","May","Jun",
-    "Jul","Aug","Sep","Oct","Nov","Dec"
-  ];
-
-  const year = new Date().getFullYear();
-  const monthMap = Object.fromEntries(months.map(m => [m, 0]));
-
-  appState.sessions.forEach(s => {
-    const d = new Date(s.time);
-    if (d.getFullYear() === year) {
-      monthMap[months[d.getMonth()]] += s.minutes;
-    }
-  });
-
-  const max = Math.max(...Object.values(monthMap), 1);
-
-  box.innerHTML = `
-    <div class="analytics-card big">
-      <h3>${year} Overview</h3>
-      ${months.map(m => barRow(m, monthMap[m], max)).join("")}
-    </div>
-  `;
-}
-
-/* ================= HELPERS ================= */
-
-function barRow(label, minutes, max) {
-  const pct = Math.round((minutes / max) * 100);
-  return `
-    <div class="bar-row">
-      <span>${label}</span>
-      <div class="bar">
-        <div class="bar-fill" style="--w:${pct}%"></div>
-      </div>
-      <span>${minutes}m</span>
-    </div>
-  `;
-}
-
-function cap(s) {
-  return s.charAt(0).toUpperCase() + s.slice(1);
-}
