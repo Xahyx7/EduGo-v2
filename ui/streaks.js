@@ -18,14 +18,14 @@ export function renderStreaks() {
     dayTotals[day] = (dayTotals[day] || 0) + s.minutes;
   });
 
-  // Extract valid streak days (>= 60 min)
+  /* ================= LONGEST STREAK (UNCHANGED) ================= */
+
   const validDays = Object.keys(dayTotals)
     .filter(d => dayTotals[d] >= MINUTES_REQUIRED)
     .map(d => new Date(d))
     .sort((a, b) => a - b);
 
   let longest = 0;
-  let current = 0;
   let temp = 0;
 
   for (let i = 0; i < validDays.length; i++) {
@@ -40,9 +40,13 @@ export function renderStreaks() {
     longest = Math.max(longest, temp);
   }
 
-  // Current streak (ending today)
-  const today = new Date().toDateString();
-  let check = new Date(today);
+  /* ================= CURRENT STREAK (FIXED) ================= */
+
+  let current = 0;
+
+  // Start checking from YESTERDAY (not today)
+  const check = new Date();
+  check.setDate(check.getDate() - 1);
 
   while (dayTotals[check.toDateString()] >= MINUTES_REQUIRED) {
     current++;
