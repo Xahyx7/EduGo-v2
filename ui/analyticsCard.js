@@ -51,13 +51,26 @@ function renderDailyAnalytics(mode) {
       }).join("") || "<p>No study yet</p>";
   }
 
+  // ✅ FIX: ONLY TODAY'S GOALS
   if (mode === "goal") {
+    const todaysGoals = appState.goals.filter(
+      g => g.date === today
+    );
+
     content.innerHTML = `
       <strong>Completed</strong>
-      ${appState.goals.filter(g => g.completed).map(g => `<div>✔ ${g.topic}</div>`).join("") || "<p>None</p>"}
+      ${
+        todaysGoals.filter(g => g.completed)
+          .map(g => `<div>✔ ${g.topic}</div>`)
+          .join("") || "<p>None</p>"
+      }
       <br />
       <strong>Pending</strong>
-      ${appState.goals.filter(g => !g.completed).map(g => `<div>○ ${g.topic}</div>`).join("") || "<p>None</p>"}
+      ${
+        todaysGoals.filter(g => !g.completed)
+          .map(g => `<div>○ ${g.topic}</div>`)
+          .join("") || "<p>None</p>"
+      }
     `;
   }
 }
