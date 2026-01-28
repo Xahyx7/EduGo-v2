@@ -67,7 +67,9 @@ function renderDaily() {
     subjectTime[s.subjectId] = (subjectTime[s.subjectId] || 0) + s.minutes;
   });
 
-  const maxTime = Math.max(...Object.values(subjectTime), 1);
+  const todaysGoals = appState.goals.filter(
+    g => g.date === today
+  );
 
   box.innerHTML = `
     <div class="analytics-card big">
@@ -83,51 +85,20 @@ function renderDaily() {
           : Object.entries(subjectTime).map(([id, min]) => {
               const name =
                 appState.subjects.find(s => s.id === id)?.name || "Unknown";
-              return barRow(name, min, maxTime);
+              return barRow(name, min, Math.max(...Object.values(subjectTime), 1));
             }).join("")
       }
     </div>
 
-    ${renderGoalAnalytics()}
-  `;
-}
-
-/* ================= GOAL ANALYTICS ================= */
-
-function renderGoalAnalytics() {
-  const subjects = {};
-
-  appState.goals.forEach(g => {
-    if (!subjects[g.subjectName]) {
-      subjects[g.subjectName] = { completed: 0, pending: 0 };
-    }
-    g.completed
-      ? subjects[g.subjectName].completed++
-      : subjects[g.subjectName].pending++;
-  });
-
-  const maxGoals = Math.max(
-    ...Object.values(subjects).map(v => v.completed + v.pending),
-    1
-  );
-
-  return `
     <div class="analytics-card">
       <h3>Goals (Today)</h3>
       ${
-        Object.keys(subjects).length === 0
-          ? "<p class='muted'>No goals yet</p>"
-          : Object.entries(subjects).map(([subject, data]) => `
+        todaysGoals.length === 0
+          ? "<p class='muted'>No goals for today</p>"
+          : todaysGoals.map(g => `
               <div class="goal-analytics-row">
-                <strong>${subject}</strong>
-                <div class="goal-bars">
-                  <div class="goal-bar completed" style="width:${(data.completed / maxGoals) * 100}%">
-                    ✔ ${data.completed}
-                  </div>
-                  <div class="goal-bar pending" style="width:${(data.pending / maxGoals) * 100}%">
-                    ○ ${data.pending}
-                  </div>
-                </div>
+                <span>${g.topic}</span>
+                <span>${g.completed ? "✔" : "○"}</span>
               </div>
             `).join("")
       }
@@ -170,7 +141,7 @@ function renderWeekly() {
   `;
 }
 
-/* ================= YEARLY (FIXED) ================= */
+/* ================= YEARLY ================= */
 
 function renderYearly() {
   const box = document.getElementById("analyticsContent");
