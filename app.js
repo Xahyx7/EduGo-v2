@@ -8,6 +8,7 @@ import { setupGoals } from "./ui/goals.js";
 import { renderGoals } from "./ui/renderGoals.js";
 import { setupDailyAnalyticsCard } from "./ui/analyticsCard.js";
 import { renderStreaks } from "./ui/streaks.js";
+import { setupSettings } from "./ui/settings.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   renderDashboard();
@@ -19,4 +20,5 @@ document.addEventListener("DOMContentLoaded", () => {
   setupGoals();
   setupFocusTimer();
   setupDailyAnalyticsCard();
+  setupSettings();
 });
