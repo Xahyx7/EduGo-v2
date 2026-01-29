@@ -1,6 +1,8 @@
 // ui/settings.js
 
-import { appState, persistState } from "../state/state.js";
+import { persistState } from "../state/state.js";
+
+const STORAGE_KEY = "eduGoState";
 
 export function setupSettings() {
   const btn = document.getElementById("settingsBtn");
@@ -44,10 +46,15 @@ function closeSettings() {
 /* ================= EXPORT ================= */
 
 function exportData() {
-  const data = JSON.stringify(appState, null, 2);
-  const blob = new Blob([data], { type: "application/json" });
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) {
+    alert("No data to export");
+    return;
+  }
 
+  const blob = new Blob([raw], { type: "application/json" });
   const url = URL.createObjectURL(blob);
+
   const a = document.createElement("a");
   a.href = url;
   a.download = "edugo-backup.json";
@@ -56,33 +63,43 @@ function exportData() {
   URL.revokeObjectURL(url);
 }
 
-/* ================= IMPORT ================= */
+/* ================= IMPORT (FIXED) ================= */
 
 function importData(e) {
   const file = e.target.files[0];
   if (!file) return;
 
   const reader = new FileReader();
+
   reader.onload = () => {
     try {
       const parsed = JSON.parse(reader.result);
 
-      if (!parsed.subjects || !parsed.goals || !parsed.sessions) {
+      // 🔒 Validate structure
+      if (
+        !parsed ||
+        !Array.isArray(parsed.subjects) ||
+        !Array.isArray(parsed.goals) ||
+        !Array.isArray(parsed.sessions)
+      ) {
         alert("Invalid EduGo backup file");
         return;
       }
 
       const ok = confirm(
-        "This will overwrite your current data.\nContinue?"
+        "This will OVERWRITE your current data.\nContinue?"
       );
-
       if (!ok) return;
 
-      localStorage.setItem("eduGoState", JSON.stringify(parsed));
-      location.reload();
+      // ✅ HARD WRITE
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
 
-    } catch {
-      alert("Failed to import file");
+      // ✅ FORCE FULL RELOAD (IMPORTANT)
+      window.location.reload(true);
+
+    } catch (err) {
+      console.error(err);
+      alert("Failed to import data");
     }
   };
 
