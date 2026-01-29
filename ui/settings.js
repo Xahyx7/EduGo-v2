@@ -1,6 +1,6 @@
 // ui/settings.js
 
-import { persistState } from "../state/state.js";
+import { appState, persistState } from "../state/state.js";
 
 const STORAGE_KEY = "eduGoState";
 
@@ -43,16 +43,16 @@ function closeSettings() {
   document.getElementById("settingsOverlay")?.remove();
 }
 
-/* ================= EXPORT ================= */
+/* ================= EXPORT (FIXED) ================= */
 
 function exportData() {
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if (!raw) {
-    alert("No data to export");
-    return;
-  }
+  // 🔑 Ensure latest state is saved first
+  persistState();
 
-  const blob = new Blob([raw], { type: "application/json" });
+  // 🔑 Export from MEMORY, not localStorage
+  const data = JSON.stringify(appState, null, 2);
+
+  const blob = new Blob([data], { type: "application/json" });
   const url = URL.createObjectURL(blob);
 
   const a = document.createElement("a");
@@ -63,7 +63,7 @@ function exportData() {
   URL.revokeObjectURL(url);
 }
 
-/* ================= IMPORT (FIXED) ================= */
+/* ================= IMPORT ================= */
 
 function importData(e) {
   const file = e.target.files[0];
@@ -91,11 +91,11 @@ function importData(e) {
       );
       if (!ok) return;
 
-      // ✅ HARD WRITE
+      // ✅ Write to storage
       localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
 
-      // ✅ FORCE FULL RELOAD (IMPORTANT)
-      window.location.reload(true);
+      // ✅ Hard reload to rehydrate appState
+      window.location.reload();
 
     } catch (err) {
       console.error(err);
